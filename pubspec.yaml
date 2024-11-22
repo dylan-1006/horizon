@@ -56,8 +56,6 @@ flutter:
     - assets/icons/login_icon.png
     - assets/icons/register_icon.png
 
- 
-
   fonts:
     - family: Garamond
       fonts:
@@ -78,4 +76,9 @@ flutter:
           weight: 700
         - asset: assets/fonts/Open Sans/OpenSans-BoldItalic.ttf
           weight: 700
+          style: italic
+        - asset: assets/fonts/Open Sans/OpenSans-SemiBold.ttf
+          weight: 500
+        - asset: assets/fonts/Open Sans/OpenSans-SemiBoldItalic.ttf
+          weight: 500
           style: italic
