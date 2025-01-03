@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "264583716910",
+    "project_id": "horizon-0000",
+    "storage_bucket": "horizon-0000.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264583716910:android:831f776dc9000fc375bfbf",
+        "android_client_info": {
+          "package_name": "com.example.horizon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBucDhViuiO8xKIbWwydNGFqAiF2j6vyWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
