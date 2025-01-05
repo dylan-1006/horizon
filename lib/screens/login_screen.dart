@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -33,59 +35,85 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
-              alignment: Alignment.centerLeft,
-              child: FormBuilderTextField(
-                name: "email",
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.email()
-                ]),
-                decoration: InputDecoration(
-                    isDense: true,
-                    labelStyle: TextStyle(
-                        fontFamily: 'Open Sans',
-                        fontSize: 15,
-                        color: Constants.accentColor),
-                    labelText: "Email",
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                            color: Constants.primaryColor, width: 1.5)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black, width: 1))),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
-              alignment: Alignment.centerLeft,
-              child: FormBuilderTextField(
-                obscureText: true,
-                name: "password",
-                validator: FormBuilderValidators.compose(
-                    [FormBuilderValidators.required()]),
-                decoration: InputDecoration(
-                    isDense: true,
-                    labelStyle: TextStyle(
-                        fontFamily: 'Open Sans',
-                        fontSize: 15,
-                        color: Constants.accentColor),
-                    labelText: "Password",
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                            color: Constants.primaryColor, width: 1.5)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black, width: 1))),
+            FormBuilder(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
+                    alignment: Alignment.centerLeft,
+                    child: FormBuilderTextField(
+                      name: "email",
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.email()
+                      ]),
+                      decoration: InputDecoration(
+                          isDense: true,
+                          labelStyle: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontSize: 15,
+                              color: Constants.accentColor),
+                          labelText: "Email",
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 16),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                  color: Constants.primaryColor, width: 1.5)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1)),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1))),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
+                    alignment: Alignment.centerLeft,
+                    child: FormBuilderTextField(
+                      obscureText: true,
+                      name: "password",
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                      ]),
+                      decoration: InputDecoration(
+                          isDense: true,
+                          labelStyle: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontSize: 15,
+                              color: Constants.accentColor),
+                          labelText: "Password",
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 16),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                  color: Constants.primaryColor, width: 1.5)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1)),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1)),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1))),
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
@@ -101,24 +129,42 @@ class LoginScreen extends StatelessWidget {
                           color: Constants.accentColor),
                     ))),
             Container(
+              margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
               width: double.infinity,
               height: 55,
-              decoration: BoxDecoration(
-                  color: Constants.primaryColor,
-                  borderRadius: BorderRadius.circular(12)),
-              margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
-              alignment: Alignment.centerLeft,
-              child: Form(
-                  child: Center(
-                child: const Text(
-                  "Log In",
-                  style: TextStyle(
-                      fontFamily: 'Open Sans',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Constants.primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12))),
+                onPressed: () {
+                  _formKey.currentState?.saveAndValidate();
+                  if (_formKey.currentState!.validate()) {
+                    final formData = _formKey.currentState!.value;
+                    print(formData['email']);
+                    print(formData['password']);
+                    try {
+                      Auth().signInWithEmailAndPassword(
+                          email: formData['email'],
+                          password: formData['password']);
+                    } on FirebaseException catch (e) {
+                      print("error" + e.message.toString());
+                    }
+                  }
+                  ;
+                },
+                child: Center(
+                  child: const Text(
+                    "Log In",
+                    style: TextStyle(
+                        fontFamily: 'Open Sans',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
                 ),
-              )),
+              ),
             ),
             Container(
               width: double.infinity,
