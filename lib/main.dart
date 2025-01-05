@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:horizon/constants.dart';
+import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Constants.primaryColor,
+            selectionColor: Constants.primaryColor,
+            selectionHandleColor: Constants.primaryColor),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
