@@ -167,22 +167,58 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             Container(
+              margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(color: Constants.accentColor),
+                    ),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        "or",
+                        style: TextStyle(fontSize: 14),
+                      )),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(color: Constants.accentColor),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
               width: double.infinity,
               height: 55,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(12)),
-              margin: const EdgeInsets.only(left: 35, right: 35, top: 70),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
+              padding: const EdgeInsets.only(left: 20),
               alignment: Alignment.centerLeft,
-              child: Form(
-                  child: Text(
-                "Sign in with Google",
-                style: TextStyle(
-                    fontFamily: 'Open Sans',
-                    fontSize: 15,
-                    color: Constants.accentColor),
-              )),
+              child: Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(right: 15),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          height: 30,
+                        ),
+                      )),
+                  Text(
+                    "Sign in with Google",
+                    style: TextStyle(
+                        fontFamily: 'Open Sans',
+                        fontSize: 15,
+                        color: Constants.accentColor),
+                  ),
+                ],
+              ),
             ),
             Container(
               width: double.infinity,
