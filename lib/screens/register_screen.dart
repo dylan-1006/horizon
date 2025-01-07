@@ -247,6 +247,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     print(formData['password']);
                     try {
                       Auth().createUserWithEmailAndPassword(
+                          name: formData['name'],
                           email: formData['email'],
                           password: formData['password']);
                     } on FirebaseException catch (e) {
