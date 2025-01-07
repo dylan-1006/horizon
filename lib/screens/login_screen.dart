@@ -5,9 +5,17 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
+  bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,12 +88,26 @@ class LoginScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
                     alignment: Alignment.centerLeft,
                     child: FormBuilderTextField(
-                      obscureText: true,
+                      obscureText: _isObscure,
                       name: "password",
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
                       decoration: InputDecoration(
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            },
+                            child: Icon(
+                              _isObscure
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              size: 20,
+                              color: Constants.accentColor,
+                            ),
+                          ),
                           isDense: true,
                           labelStyle: TextStyle(
                               fontFamily: 'Open Sans',
@@ -177,7 +199,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      margin: EdgeInsets.symmetric(horizontal: 13),
                       child: Text(
                         "or",
                         style: TextStyle(fontSize: 14),

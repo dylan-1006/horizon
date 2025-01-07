@@ -5,9 +5,17 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 
-class RegisterScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormBuilderState>();
+class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +26,7 @@ class RegisterScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                margin: EdgeInsets.only(top: 90),
+                margin: EdgeInsets.only(top: 70),
                 child: Center(
                   child: Image.asset(
                     'assets/icons/register_icon.png',
@@ -43,23 +51,59 @@ class RegisterScreen extends StatelessWidget {
                   border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(12)),
               margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(left: 20),
               alignment: Alignment.centerLeft,
-              child: Form(
-                  child: Text(
-                "Continue with Google",
-                style: TextStyle(
-                    fontFamily: 'Open Sans',
-                    fontSize: 15,
-                    color: Constants.accentColor),
-              )),
+              child: Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(right: 15),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          height: 30,
+                        ),
+                      )),
+                  Text(
+                    "Continue with Google",
+                    style: TextStyle(
+                        fontFamily: 'Open Sans',
+                        fontSize: 15,
+                        color: Constants.accentColor),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 35, right: 35, top: 25),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(color: Constants.accentColor),
+                    ),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 13),
+                      child: Text(
+                        "or",
+                        style: TextStyle(fontSize: 14),
+                      )),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(color: Constants.accentColor),
+                    ),
+                  ),
+                ],
+              ),
             ),
             FormBuilder(
               key: _formKey,
               child: Column(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 35, right: 35, top: 60),
+                    margin: const EdgeInsets.only(left: 35, right: 35, top: 25),
                     alignment: Alignment.centerLeft,
                     child: FormBuilderTextField(
                       name: "name",
@@ -135,12 +179,26 @@ class RegisterScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
                     alignment: Alignment.centerLeft,
                     child: FormBuilderTextField(
-                      obscureText: true,
+                      obscureText: _isObscure,
                       name: "password",
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
                       decoration: InputDecoration(
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            },
+                            child: Icon(
+                              _isObscure
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              size: 20,
+                              color: Constants.accentColor,
+                            ),
+                          ),
                           isDense: true,
                           labelStyle: TextStyle(
                               fontFamily: 'Open Sans',
