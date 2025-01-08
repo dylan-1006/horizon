@@ -6,6 +6,8 @@ import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:horizon/screens/register_screen.dart';
+import 'package:horizon/screens/reset_password_screen.dart';
+import 'package:horizon/widget_tree.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -46,6 +48,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return RegisterScreen();
+    return WidgetTree();
+    //return ResetPasswordScreen();
   }
 }

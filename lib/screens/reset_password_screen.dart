@@ -15,9 +15,11 @@ class ResetPasswordScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         leading: Container(
-          margin: EdgeInsets.only(top: 25, left: 10),
+          padding: EdgeInsets.only(top: 25, left: 10),
+          //  margin: EdgeInsets.only(top: 25, left: 10),
           child: const BackButton(),
         ),
       ),
@@ -62,38 +64,42 @@ class ResetPasswordScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 35, right: 35, top: 40),
-              alignment: Alignment.centerLeft,
-              child: FormBuilderTextField(
-                name: "email",
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.email()
-                ]),
-                decoration: InputDecoration(
-                    isDense: true,
-                    labelStyle: TextStyle(
-                        fontFamily: 'Open Sans',
-                        fontSize: 15,
-                        color: Constants.accentColor),
-                    labelText: "Email",
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                            color: Constants.primaryColor, width: 1.5)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black, width: 1)),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.red, width: 1)),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.red, width: 1))),
+            FormBuilder(
+              key: _formKey,
+              child: Container(
+                margin: const EdgeInsets.only(left: 35, right: 35, top: 40),
+                alignment: Alignment.centerLeft,
+                child: FormBuilderTextField(
+                  name: "email",
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.email()
+                  ]),
+                  decoration: InputDecoration(
+                      isDense: true,
+                      labelStyle: TextStyle(
+                          fontFamily: 'Open Sans',
+                          fontSize: 15,
+                          color: Constants.accentColor),
+                      labelText: "Email",
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: Constants.primaryColor, width: 1.5)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.red, width: 1)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.red, width: 1))),
+                ),
               ),
             ),
             Container(
@@ -111,11 +117,8 @@ class ResetPasswordScreen extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     final formData = _formKey.currentState!.value;
                     print(formData['email']);
-                    print(formData['password']);
                     try {
-                      Auth().signInWithEmailAndPassword(
-                          email: formData['email'],
-                          password: formData['password']);
+                      Auth().resetPassword(email: formData['email']);
                     } on FirebaseException catch (e) {
                       print("error" + e.message.toString());
                     }
