@@ -92,6 +92,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       name: "password",
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
+                        FormBuilderValidators.minLength(8,
+                            errorText:
+                                "Password must be at least 8 characters long ")
                       ]),
                       decoration: InputDecoration(
                           suffixIcon: GestureDetector(
@@ -213,33 +216,42 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            Container(
-              width: double.infinity,
-              height: 55,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(12)),
-              margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
-              padding: const EdgeInsets.only(left: 20),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(right: 15),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          height: 30,
-                        ),
-                      )),
-                  Text(
-                    "Sign in with Google",
-                    style: TextStyle(
-                        fontFamily: 'Open Sans',
-                        fontSize: 15,
-                        color: Constants.accentColor),
-                  ),
-                ],
+            GestureDetector(
+              onTap: () {
+                try {
+                  Auth().signInWithGoogle();
+                } on FirebaseException catch (e) {
+                  print("error" + e.message.toString());
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                height: 55,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12)),
+                margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
+                padding: const EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    Container(
+                        margin: EdgeInsets.only(right: 15),
+                        child: Center(
+                          child: Image.asset(
+                            'assets/icons/google_icon.png',
+                            height: 30,
+                          ),
+                        )),
+                    Text(
+                      "Sign in with Google",
+                      style: TextStyle(
+                          fontFamily: 'Open Sans',
+                          fontSize: 15,
+                          color: Constants.accentColor),
+                    ),
+                  ],
+                ),
               ),
             ),
             Container(

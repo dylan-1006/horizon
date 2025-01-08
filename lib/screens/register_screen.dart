@@ -183,6 +183,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       name: "password",
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
+                        FormBuilderValidators.minLength(8,
+                            errorText:
+                                "Password must be at least 8 characters long ")
                       ]),
                       decoration: InputDecoration(
                           suffixIcon: GestureDetector(
