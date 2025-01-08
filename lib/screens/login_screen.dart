@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/reset_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -145,13 +146,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 margin: const EdgeInsets.only(right: 35, top: 8),
                 child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      "Forgot your password?",
-                      style: TextStyle(
-                          fontFamily: 'Open Sans',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Constants.accentColor),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ResetPasswordScreen()));
+                      },
+                      child: Text(
+                        "Forgot your password?",
+                        style: TextStyle(
+                            fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Constants.accentColor),
+                      ),
                     ))),
             Container(
               margin: const EdgeInsets.only(left: 35, right: 35, top: 30),
