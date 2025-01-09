@@ -18,9 +18,7 @@ class ResetPasswordScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         leading: Container(
-          padding: EdgeInsets.only(top: 25, left: 10),
-          //  margin: EdgeInsets.only(top: 25, left: 10),
-          child: const BackButton(),
+          child: BackButton(),
         ),
       ),
       body: SingleChildScrollView(
