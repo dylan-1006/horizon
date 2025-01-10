@@ -7,6 +7,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/login_screen.dart';
+import 'package:horizon/widget_tree.dart';
 
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
@@ -333,7 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                              builder: (context) => WidgetTree()));
                     },
                     child: Container(
                       child: Text("Sign In",
