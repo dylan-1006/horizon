@@ -1,9 +1,12 @@
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
@@ -251,18 +254,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
-                onPressed: () {
+                onPressed: () async {
                   _formKey.currentState?.saveAndValidate();
                   if (_formKey.currentState!.validate()) {
                     final formData = _formKey.currentState!.value;
                     print(formData['email']);
                     print(formData['password']);
                     try {
-                      Auth().createUserWithEmailAndPassword(
+                      await Auth().createUserWithEmailAndPassword(
                           name: formData['name'],
                           email: formData['email'],
                           password: formData['password']);
                     } on FirebaseException catch (e) {
+                      if (e.code == 'email-already-in-use') {
+                        DelightToastBar(
+                            autoDismiss: true,
+                            builder: (context) => const ToastCard(
+                                color: Colors.red,
+                                leading: Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
+                                title: Text(
+                                  "An account has already been created with this email address.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ))).show(context);
+                      } else {
+                        DelightToastBar(
+                            autoDismiss: true,
+                            builder: (context) => const ToastCard(
+                                color: Colors.red,
+                                leading: Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
+                                title: Text(
+                                  "Something went wrong. Please try again.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ))).show(context);
+                      }
+
                       print("error" + e.message.toString());
                     }
                   }
@@ -293,13 +328,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontSize: 15,
                         color: Colors.black),
                   ),
-                  Container(
-                    child: Text("Sign In",
-                        style: TextStyle(
-                            fontFamily: 'Open Sans',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Constants.primaryColor)),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
+                    child: Container(
+                      child: Text("Sign In",
+                          style: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Constants.primaryColor)),
+                    ),
                   )
                 ],
               ),

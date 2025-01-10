@@ -1,9 +1,12 @@
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/register_screen.dart';
 import 'package:horizon/screens/reset_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -172,17 +175,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
-                onPressed: () {
+                onPressed: () async {
                   _formKey.currentState?.saveAndValidate();
                   if (_formKey.currentState!.validate()) {
                     final formData = _formKey.currentState!.value;
                     print(formData['email']);
                     print(formData['password']);
                     try {
-                      Auth().signInWithEmailAndPassword(
+                      await Auth().signInWithEmailAndPassword(
                           email: formData['email'],
                           password: formData['password']);
-                    } on FirebaseException catch (e) {
+                    } on FirebaseAuthException catch (e) {
+                      DelightToastBar(
+                          autoDismiss: true,
+                          builder: (context) => const ToastCard(
+                              color: Colors.red,
+                              leading: Icon(
+                                Icons.error,
+                                color: Colors.white,
+                              ),
+                              title: Text(
+                                "Incorrect email or password.",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ))).show(context);
+
                       print("error" + e.message.toString());
                     }
                   }
@@ -276,13 +294,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 15,
                         color: Colors.black),
                   ),
-                  Container(
-                    child: Text("Sign up",
-                        style: TextStyle(
-                            fontFamily: 'Open Sans',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Constants.primaryColor)),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()));
+                    },
+                    child: Container(
+                      child: Text("Sign up",
+                          style: TextStyle(
+                              fontFamily: 'Open Sans',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Constants.primaryColor)),
+                    ),
                   )
                 ],
               ),
