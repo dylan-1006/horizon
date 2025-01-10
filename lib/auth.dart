@@ -29,6 +29,7 @@ class Auth {
         {"email": value.user!.email, "id": value.user!.uid, 'name': name},
       );
     });
+    _firebaseAuth.currentUser?.updateDisplayName(name);
   }
 
   Future<void> signInWithGoogle() async {
