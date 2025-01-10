@@ -63,6 +63,8 @@ flutter:
     - assets/icons/login_icon.png
     - assets/icons/register_icon.png
     - assets/icons/google_icon.png
+    - assets/images/gradient_background.png
+    - assets/icons/app_icon.png
 
   fonts:
     - family: Garamond
