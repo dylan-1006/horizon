@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return _accountCreated
         ? Scaffold(
             body: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   image: DecorationImage(
                       image:
                           AssetImage('assets/images/gradient_background.png'),
@@ -34,15 +34,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 170),
+                    margin: const EdgeInsets.only(top: 170),
                     child: Image.asset(
                       'assets/icons/app_icon.png',
                       width: 200,
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 35, right: 35),
-                    child: Text(
+                    margin: const EdgeInsets.only(left: 35, right: 35),
+                    child: const Text(
                       textAlign: TextAlign.center,
                       "Welcome to Horizon! ",
                       style: TextStyle(
@@ -53,8 +53,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Expanded(
                     child: Container(
-                      margin: EdgeInsets.only(left: 35, right: 35, top: 20),
-                      child: Text(
+                      margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
+                      child: const Text(
                         textAlign: TextAlign.center,
                         "We're thrilled to have you on board and can't wait for you to explore and achieve great things with us.",
                         style: TextStyle(fontSize: 16, color: Colors.white),
@@ -78,8 +78,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             MaterialPageRoute(
                                 builder: (context) => WidgetTree()));
                       },
-                      child: Center(
-                        child: const Text(
+                      child: const Center(
+                        child: Text(
                           "Explore Horizon",
                           style: TextStyle(
                               fontFamily: 'Open Sans',
@@ -101,14 +101,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                      margin: EdgeInsets.only(top: 70),
+                      margin: const EdgeInsets.only(top: 70),
                       child: Center(
                         child: Image.asset(
                           'assets/icons/register_icon.png',
                           width: 160,
                         ),
                       )),
-                  Center(
+                  const Center(
                     child: Text(
                       "Get Started",
                       style: TextStyle(
@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       try {
                         Auth().signInWithGoogle();
                       } on FirebaseException catch (e) {
-                        print("error" + e.message.toString());
+                        print("error${e.message}");
                       }
                     },
                     child: Container(
@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Row(
                         children: [
                           Container(
-                              margin: EdgeInsets.only(right: 15),
+                              margin: const EdgeInsets.only(right: 15),
                               child: Center(
                                 child: Image.asset(
                                   'assets/icons/google_icon.png',
@@ -170,8 +170,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.symmetric(horizontal: 13),
-                            child: Text(
+                            margin: const EdgeInsets.symmetric(horizontal: 13),
+                            child: const Text(
                               "or",
                               style: TextStyle(fontSize: 14),
                             )),
@@ -205,26 +205,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     fontSize: 15,
                                     color: Constants.accentColor),
                                 labelText: "Name",
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 16),
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Constants.primaryColor,
                                         width: 1.5)),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.black, width: 1)),
                                 errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.red, width: 1)),
                                 focusedErrorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.red, width: 1))),
                           ),
                         ),
@@ -245,26 +245,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     fontSize: 15,
                                     color: Constants.accentColor),
                                 labelText: "Email",
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 16),
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Constants.primaryColor,
                                         width: 1.5)),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.black, width: 1)),
                                 errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.red, width: 1)),
                                 focusedErrorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.red, width: 1))),
                           ),
                         ),
@@ -302,26 +302,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     fontSize: 15,
                                     color: Constants.accentColor),
                                 labelText: "Password",
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 16),
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Constants.primaryColor,
                                         width: 1.5)),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.black, width: 1)),
                                 errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.red, width: 1)),
                                 focusedErrorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Colors.red, width: 1))),
                           ),
                         ),
@@ -387,13 +387,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             ))).show(context);
                                   }
 
-                                  print("error" + e.message.toString());
+                                  print("error${e.message}");
                                 }
                               }
-                              ;
                             },
-                      child: Center(
-                        child: const Text(
+                      child: const Center(
+                        child: Text(
                           "Sign up",
                           style: TextStyle(
                               fontFamily: 'Open Sans',
@@ -406,11 +405,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Container(
                     width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 60, top: 40),
+                    margin: const EdgeInsets.only(bottom: 60, top: 40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Already have an account? ",
                           style: TextStyle(
                               fontFamily: 'Open Sans',

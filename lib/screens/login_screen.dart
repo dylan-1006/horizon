@@ -29,14 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                margin: EdgeInsets.only(top: 80),
+                margin: const EdgeInsets.only(top: 80),
                 child: Center(
                   child: Image.asset(
                     'assets/icons/login_icon.png',
                     width: 160,
                   ),
                 )),
-            Center(
+            const Center(
               child: Text(
                 "Welcome back!",
                 style: TextStyle(
@@ -67,25 +67,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 15,
                               color: Constants.accentColor),
                           labelText: "Email",
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 16),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Constants.primaryColor, width: 1.5)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide:
-                                  BorderSide(color: Colors.black, width: 1)),
+                                  const BorderSide(color: Colors.black, width: 1)),
                           errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide:
-                                  BorderSide(color: Colors.red, width: 1)),
+                                  const BorderSide(color: Colors.red, width: 1)),
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide:
-                                  BorderSide(color: Colors.red, width: 1))),
+                                  const BorderSide(color: Colors.red, width: 1))),
                     ),
                   ),
                   Container(
@@ -121,25 +121,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 15,
                               color: Constants.accentColor),
                           labelText: "Password",
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 16),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Constants.primaryColor, width: 1.5)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide:
-                                  BorderSide(color: Colors.black, width: 1)),
+                                  const BorderSide(color: Colors.black, width: 1)),
                           errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide:
-                                  BorderSide(color: Colors.red, width: 1)),
+                                  const BorderSide(color: Colors.red, width: 1)),
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide:
-                                  BorderSide(color: Colors.red, width: 1))),
+                                  const BorderSide(color: Colors.red, width: 1))),
                     ),
                   ),
                 ],
@@ -154,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ResetPasswordScreen()));
+                                builder: (context) => const ResetPasswordScreen()));
                       },
                       child: Text(
                         "Forgot your password?",
@@ -206,8 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   ;
                 },
-                child: Center(
-                  child: const Text(
+                child: const Center(
+                  child: Text(
                     "Log In",
                     style: TextStyle(
                         fontFamily: 'Open Sans',
@@ -229,8 +229,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.symmetric(horizontal: 13),
-                      child: Text(
+                      margin: const EdgeInsets.symmetric(horizontal: 13),
+                      child: const Text(
                         "or",
                         style: TextStyle(fontSize: 14),
                       )),
@@ -248,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 try {
                   Auth().signInWithGoogle();
                 } on FirebaseException catch (e) {
-                  print("error" + e.message.toString());
+                  print("error${e.message}");
                 }
               },
               child: Container(
@@ -263,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Row(
                   children: [
                     Container(
-                        margin: EdgeInsets.only(right: 15),
+                        margin: const EdgeInsets.only(right: 15),
                         child: Center(
                           child: Image.asset(
                             'assets/icons/google_icon.png',
@@ -283,11 +283,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Container(
               width: double.infinity,
-              margin: EdgeInsets.symmetric(vertical: 60),
+              margin: const EdgeInsets.symmetric(vertical: 60),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Dont have an account? ",
                     style: TextStyle(
                         fontFamily: 'Open Sans',
@@ -302,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               builder: (context) => RegisterScreen()));
                     },
                     child: Container(
-                      child: Text("Sign up",
+                      child: const Text("Sign up",
                           style: TextStyle(
                               fontFamily: 'Open Sans',
                               fontSize: 15,

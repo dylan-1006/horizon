@@ -20,7 +20,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   String? emailAddress;
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormBuilderState>();
+    final formKey = GlobalKey<FormBuilderState>();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -28,7 +28,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         leading: Container(
-          child: BackButton(),
+          child: const BackButton(),
         ),
       ),
       body: SingleChildScrollView(
@@ -37,8 +37,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 35, right: 35, top: 50),
-                      child: Text("Check your inbox",
+                      margin: const EdgeInsets.only(left: 35, right: 35, top: 50),
+                      child: const Text("Check your inbox",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -46,7 +46,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           )),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 35, right: 35, top: 10),
+                      margin: const EdgeInsets.only(left: 35, right: 35, top: 10),
                       child: Text(
                           "A link to reset your password was sent to $emailAddress",
                           textAlign: TextAlign.center,
@@ -57,8 +57,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           )),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 50),
-                      child: Icon(
+                      margin: const EdgeInsets.only(top: 50),
+                      child: const Icon(
                         size: 102,
                         Icons.email,
                         color: Constants.primaryColor,
@@ -81,8 +81,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               MaterialPageRoute(
                                   builder: (context) => WidgetTree()));
                         },
-                        child: Center(
-                          child: const Text(
+                        child: const Center(
+                          child: Text(
                             "Done",
                             style: TextStyle(
                                 fontFamily: 'Open Sans',
@@ -124,9 +124,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                       ),
                                     ))).show(context);
                             setState() {}
-                            ;
                           } on FirebaseException catch (e) {
-                            print("error" + e.message.toString());
+                            print("error${e.message}");
                             DelightToastBar(
                                 autoDismiss: true,
                                 builder: (context) => const ToastCard(
@@ -143,8 +142,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                     ))).show(context);
                           }
                         },
-                        child: Center(
-                          child: const Text(
+                        child: const Center(
+                          child: Text(
                             "Resend Email",
                             style: TextStyle(
                                 fontFamily: 'Open Sans',
@@ -161,22 +160,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             : Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 100),
+                    margin: const EdgeInsets.only(top: 100),
                     decoration: BoxDecoration(
                       border: Border.all(
                           color: Colors.black.withOpacity(0.4), width: 1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.all(10),
-                    child: Icon(
+                    padding: const EdgeInsets.all(10),
+                    child: const Icon(
                       size: 42,
                       Icons.fingerprint_rounded,
                       color: Colors.black,
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 35, right: 35, top: 20),
-                    child: Text(
+                    margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
+                    child: const Text(
                       "Forgot Password?",
                       style: TextStyle(
                           color: Colors.black,
@@ -186,7 +185,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 35, right: 35, top: 10),
+                    margin: const EdgeInsets.only(left: 35, right: 35, top: 10),
                     child: Text(
                       textAlign: TextAlign.center,
                       "No worries! Enter your email address and we'll send you a link to reset your password",
@@ -198,7 +197,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                   FormBuilder(
-                    key: _formKey,
+                    key: formKey,
                     child: Container(
                       margin:
                           const EdgeInsets.only(left: 35, right: 35, top: 40),
@@ -216,25 +215,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 fontSize: 15,
                                 color: Constants.accentColor),
                             labelText: "Email",
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 16),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                     color: Constants.primaryColor, width: 1.5)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide:
-                                    BorderSide(color: Colors.black, width: 1)),
+                                    const BorderSide(color: Colors.black, width: 1)),
                             errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide:
-                                    BorderSide(color: Colors.red, width: 1)),
+                                    const BorderSide(color: Colors.red, width: 1)),
                             focusedErrorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide:
-                                    BorderSide(color: Colors.red, width: 1))),
+                                    const BorderSide(color: Colors.red, width: 1))),
                       ),
                     ),
                   ),
@@ -249,9 +248,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12))),
                       onPressed: () async {
-                        _formKey.currentState?.saveAndValidate();
-                        if (_formKey.currentState!.validate()) {
-                          final formData = _formKey.currentState!.value;
+                        formKey.currentState?.saveAndValidate();
+                        if (formKey.currentState!.validate()) {
+                          final formData = formKey.currentState!.value;
                           emailAddress = formData['email'];
                           print(formData['email']);
                           try {
@@ -261,7 +260,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               _emailSent = true;
                             });
                           } on FirebaseException catch (e) {
-                            print("error" + e.message.toString());
+                            print("error${e.message}");
                             DelightToastBar(
                                 autoDismiss: true,
                                 builder: (context) => const ToastCard(
@@ -278,10 +277,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                     ))).show(context);
                           }
                         }
-                        ;
                       },
-                      child: Center(
-                        child: const Text(
+                      child: const Center(
+                        child: Text(
                           "Reset password",
                           style: TextStyle(
                               fontFamily: 'Open Sans',
