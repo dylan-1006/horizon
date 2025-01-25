@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>264583716910-2rvbu4rcj1cjn0enr85odaoqf0ltlc44.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.264583716910-2rvbu4rcj1cjn0enr85odaoqf0ltlc44</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>264583716910-e0tglicgstklopk64v0j34garlu1skpq.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB7tgV5iF4KSSQzif0PnI5g5A0JTF3otEc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>264583716910</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.horizon</string>
+	<key>PROJECT_ID</key>
+	<string>horizon-0000</string>
+	<key>STORAGE_BUCKET</key>
+	<string>horizon-0000.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:264583716910:ios:6cc275b516a04f5d75bfbf</string>
+</dict>
+</plist>
