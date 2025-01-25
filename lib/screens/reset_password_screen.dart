@@ -28,7 +28,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         leading: Container(
-          child: const BackButton(),
+          child: const BackButton(
+            color: Colors.black,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -37,7 +39,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 child: Column(
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 35, right: 35, top: 50),
+                      margin:
+                          const EdgeInsets.only(left: 35, right: 35, top: 50),
                       child: const Text("Check your inbox",
                           style: TextStyle(
                             color: Colors.black,
@@ -46,7 +49,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           )),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 35, right: 35, top: 10),
+                      margin:
+                          const EdgeInsets.only(left: 35, right: 35, top: 10),
                       child: Text(
                           "A link to reset your password was sent to $emailAddress",
                           textAlign: TextAlign.center,
@@ -224,16 +228,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                     color: Constants.primaryColor, width: 1.5)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    const BorderSide(color: Colors.black, width: 1)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 1)),
                             errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    const BorderSide(color: Colors.red, width: 1)),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 1)),
                             focusedErrorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    const BorderSide(color: Colors.red, width: 1))),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 1))),
                       ),
                     ),
                   ),
