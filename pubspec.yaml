@@ -67,6 +67,7 @@ flutter:
     - assets/images/gradient_background.png
     - assets/icons/app_icon.png
     - assets/images/home_screen_background.png
+    - assets/images/settings_screen_background.png
 
   fonts:
     - family: Garamond
