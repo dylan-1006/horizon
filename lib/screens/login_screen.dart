@@ -10,7 +10,7 @@ import 'package:horizon/screens/register_screen.dart';
 import 'package:horizon/screens/reset_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -201,10 +201,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ))).show(context);
 
-                      print("error" + e.message.toString());
+                      print("error${e.message}");
                     }
                   }
-                  ;
                 },
                 child: const Center(
                   child: Text(

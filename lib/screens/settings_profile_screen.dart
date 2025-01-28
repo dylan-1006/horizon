@@ -29,7 +29,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
       body: Stack(children: [
         Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(
                       'assets/images/settings_screen_background.png'),
@@ -43,8 +43,8 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                 child: Container(
                   width: 90,
                   height: 90,
-                  margin: EdgeInsets.only(top: 85),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.only(top: 85),
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.contain,
@@ -53,8 +53,8 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               ),
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: Text(
+                  margin: const EdgeInsets.only(top: 15),
+                  child: const Text(
                     "NAME OF USER",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   ),
@@ -71,13 +71,13 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               ),
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 10,
                   ),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Constants.primaryColor,
-                        padding: EdgeInsets.symmetric(horizontal: 28),
+                        padding: const EdgeInsets.symmetric(horizontal: 28),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(60)),
                         elevation: 0),
@@ -85,10 +85,10 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                       await Auth().signOut();
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => WidgetTree()),
+                          MaterialPageRoute(builder: (context) => const WidgetTree()),
                           (route) => false);
                     },
-                    child: Text(
+                    child: const Text(
                       "Edit Profile",
                       style: TextStyle(color: Colors.white, fontSize: 13),
                     ),
@@ -98,7 +98,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               CupertinoListSection.insetGrouped(
                 backgroundColor: Colors.transparent,
                 header: Container(
-                    margin: EdgeInsets.only(left: 20, top: 40),
+                    margin: const EdgeInsets.only(left: 20, top: 40),
                     child: Text(
                       "Preferences",
                       style: TextStyle(
@@ -107,20 +107,20 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           fontFamily: 'Open Sans',
                           fontWeight: FontWeight.normal),
                     )),
-                margin: EdgeInsets.symmetric(horizontal: 25),
+                margin: const EdgeInsets.symmetric(horizontal: 25),
                 children: [
                   CupertinoListTile.notched(
-                    title: Text(
+                    title: const Text(
                       "Push Notifications",
                       style: TextStyle(fontFamily: 'Open Sans'),
                     ),
                     leading: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xff9fa0ac),
+                          color: const Color(0xff9fa0ac),
                           borderRadius: BorderRadius.circular(7)),
                       width: double.infinity,
                       height: double.infinity,
-                      child: Icon(
+                      child: const Icon(
                         Icons.notifications_none_outlined,
                         color: Colors.white,
                       ),
@@ -129,7 +129,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                         CupertinoSwitch(value: false, onChanged: (value) {}),
                   ),
                   CupertinoListTile.notched(
-                    title: Text(
+                    title: const Text(
                       "Fit Bit Health",
                       style: TextStyle(fontFamily: 'Open Sans'),
                     ),
@@ -141,22 +141,22 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                               color: Constants.accentColor, width: 0.5)),
                       width: double.infinity,
                       height: double.infinity,
-                      child: Icon(
+                      child: const Icon(
                         size: 20,
                         Icons.heart_broken,
                         color: Colors.red,
                       ),
                     ),
-                    trailing: CupertinoListTileChevron(),
+                    trailing: const CupertinoListTileChevron(),
                     onTap: () {},
-                    additionalInfo: Text("Not connected"),
+                    additionalInfo: const Text("Not connected"),
                   ),
                 ],
               ),
               CupertinoListSection.insetGrouped(
                 backgroundColor: Colors.transparent,
                 header: Container(
-                    margin: EdgeInsets.only(left: 20, top: 10),
+                    margin: const EdgeInsets.only(left: 20, top: 10),
                     child: Text(
                       "Help",
                       style: TextStyle(
@@ -165,47 +165,47 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           fontFamily: 'Open Sans',
                           fontWeight: FontWeight.normal),
                     )),
-                margin: EdgeInsets.symmetric(horizontal: 25),
+                margin: const EdgeInsets.symmetric(horizontal: 25),
                 children: [
                   CupertinoListTile.notched(
-                    title: Text(
+                    title: const Text(
                       "Privacy Policy",
                       style: TextStyle(fontFamily: 'Open Sans'),
                     ),
                     leading: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xff007AFF),
+                          color: const Color(0xff007AFF),
                           borderRadius: BorderRadius.circular(7)),
                       width: double.infinity,
                       height: double.infinity,
-                      child: Icon(
+                      child: const Icon(
                         Icons.privacy_tip_outlined,
                         color: Colors.white,
                       ),
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.info_outline,
                       color: Color(0xff007aff),
                     ),
                   ),
                   CupertinoListTile.notched(
-                    title: Text(
+                    title: const Text(
                       "Support",
                       style: TextStyle(fontFamily: 'Open Sans'),
                     ),
                     leading: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xff007AFF),
+                          color: const Color(0xff007AFF),
                           borderRadius: BorderRadius.circular(7)),
                       width: double.infinity,
                       height: double.infinity,
-                      child: Icon(
+                      child: const Icon(
                         size: 20,
                         Icons.help_rounded,
                         color: Colors.white,
                       ),
                     ),
-                    trailing: CupertinoListTileChevron(),
+                    trailing: const CupertinoListTileChevron(),
                     onTap: () {},
                   ),
                   CupertinoListTile.notched(
@@ -213,10 +213,10 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                       await Auth().signOut();
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => WidgetTree()),
+                          MaterialPageRoute(builder: (context) => const WidgetTree()),
                           (route) => false);
                     },
-                    title: Text(
+                    title: const Text(
                       "Logout",
                       style: TextStyle(
                           fontFamily: 'Open Sans',
@@ -225,11 +225,11 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     ),
                     leading: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xffFF2B51),
+                          color: const Color(0xffFF2B51),
                           borderRadius: BorderRadius.circular(7)),
                       width: double.infinity,
                       height: double.infinity,
-                      child: Icon(
+                      child: const Icon(
                         size: 22,
                         Icons.logout_sharp,
                         color: Colors.white,
