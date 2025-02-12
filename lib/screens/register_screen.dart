@@ -10,7 +10,7 @@ import 'package:horizon/screens/login_screen.dart';
 import 'package:horizon/widget_tree.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WidgetTree()));
+                                builder: (context) => const WidgetTree()));
                       },
                       child: const Center(
                         child: Text(
@@ -421,10 +421,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WidgetTree()));
+                                    builder: (context) => const WidgetTree()));
                           },
                           child: Container(
-                            child: Text("Sign In",
+                            child: const Text("Sign In",
                                 style: TextStyle(
                                     fontFamily: 'Open Sans',
                                     fontSize: 15,

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/fitbit_authorisation_screen.dart';
 import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,6 +50,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return WidgetTree();
+    return FitbitAuthorisationScreen();
   }
 }
