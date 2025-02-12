@@ -42,6 +42,7 @@ dependencies:
   google_sign_in: ^6.2.2
   delightful_toast: ^1.1.0
   loading_indicator: ^3.1.1
+  webview_flutter: ^4.10.0
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
     - assets/icons/app_icon.png
     - assets/images/home_screen_background.png
     - assets/images/settings_screen_background.png
+    - assets/images/default_user_profile_picture.jpg
 
   fonts:
     - family: Garamond
