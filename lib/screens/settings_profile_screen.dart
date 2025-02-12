@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/fitbit_authorisation_screen.dart';
 import 'package:horizon/widget_tree.dart';
 
 class SettingsProfileScreen extends StatefulWidget {
@@ -136,7 +137,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                   ),
                   CupertinoListTile.notched(
                     title: const Text(
-                      "Fit Bit Health",
+                      "FitBit Health",
                       style: TextStyle(fontFamily: 'Open Sans'),
                     ),
                     leading: Container(
@@ -154,7 +155,13 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                       ),
                     ),
                     trailing: const CupertinoListTileChevron(),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FitbitAuthorisationScreen()));
+                    },
                     additionalInfo: const Text("Not connected"),
                   ),
                 ],

@@ -18,7 +18,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
 
   void initState() {
     super.initState();
-    authoriseUser();
+
     webController.setJavaScriptMode(JavaScriptMode.unrestricted);
     webController.setNavigationDelegate(
       NavigationDelegate(
@@ -31,6 +31,8 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
         onUrlChange: (change) async {
           if (change.url!.contains("horizon-0000.web.app/open")) {
             webController.loadRequest(Uri.parse('about:blank'));
+            final Uri uri = Uri.parse(change.url!);
+            authorization_code = uri.queryParameters['code'];
             isLoading.value = true;
 
             webController.loadHtmlString('''
@@ -45,11 +47,9 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
 </html>
 
             ''');
+            authoriseUser();
 
-            await Future.delayed(const Duration(seconds: 10));
-
-            _handleFinalRedirectUrl(
-                "https://horizon-000.web.app/open/?code=$authorization_code");
+            _handleFinalRedirectUrl(change.url!);
           }
         },
       ),
@@ -138,12 +138,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
           ValueListenableBuilder<bool>(
             valueListenable: isLoading,
             builder: (context, value, child) {
-              return value
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                          color: Constants.primaryColor),
-                    )
-                  : const SizedBox.shrink();
+              return value ? LoadingScreen() : const SizedBox.shrink();
             },
           ),
         ],
