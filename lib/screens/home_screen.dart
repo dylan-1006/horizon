@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
+import 'package:horizon/utils/database_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,8 +12,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Map<String, dynamic> userData = {};
   Future<void> fetchData() async {
-    await Future.delayed(const Duration(seconds: 3));
+    String userId = await Auth().getUserId();
+    userData = await getUserData(userId);
+  }
+
+  static Future<Map<String, dynamic>> getUserData(String userId) async {
+    final userSnapshot = await DatabaseUtils.readDocument('users', userId);
+    Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+    return userData;
   }
 
   @override
@@ -29,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
             body: SingleChildScrollView(
               child: Container(
                 height: 1100,
-                //   height: MediaQuery.sizeOf(context).height,
                 width: double.infinity,
                 decoration: const BoxDecoration(
                     image: DecorationImage(
@@ -56,19 +64,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsProfileScreen()));
+                                    builder: (context) => SettingsProfileScreen(
+                                          userData: userData,
+                                        )));
                           },
                           child: Container(
                             width: 45,
                             height: 45,
                             margin: const EdgeInsets.only(right: 20, top: 95),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                     fit: BoxFit.contain,
-                                    image: AssetImage(
-                                        'assets/icons/app_icon.png'))),
+                                    image: userData['profileImgUrl'] != null
+                                        ? NetworkImage(
+                                            userData['profileImgUrl'])
+                                        : const AssetImage(
+                                            'assets/images/default_user_profile_picture.jpg'))),
                           ),
                         ),
                       ],

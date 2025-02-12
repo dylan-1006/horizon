@@ -5,19 +5,21 @@ import 'package:horizon/constants.dart';
 import 'package:horizon/widget_tree.dart';
 
 class SettingsProfileScreen extends StatefulWidget {
-  const SettingsProfileScreen({super.key});
+  final Map<String, dynamic> userData;
+  const SettingsProfileScreen({super.key, required this.userData});
 
   @override
   State<SettingsProfileScreen> createState() => _SettingsProfileScreenState();
 }
 
 class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
+  bool _isNotificationsOn = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 4,
+        elevation: 0,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         leading: Container(
@@ -26,16 +28,15 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
           ),
         ),
       ),
-      body: Stack(children: [
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(
-                      'assets/images/settings_screen_background.png'),
-                  fit: BoxFit.cover)),
-        ),
-        SingleChildScrollView(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image:
+                    AssetImage('assets/images/settings_screen_background.png'),
+                fit: BoxFit.cover)),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -44,18 +45,21 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                   width: 90,
                   height: 90,
                   margin: const EdgeInsets.only(top: 85),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.contain,
-                          image: AssetImage('assets/icons/app_icon.png'))),
+                          image: widget.userData['profileImgUrl'] != null
+                              ? NetworkImage(widget.userData['profileImgUrl'])
+                              : const AssetImage(
+                                  'assets/images/default_user_profile_picture.jpg'))),
                 ),
               ),
               Center(
                 child: Container(
                   margin: const EdgeInsets.only(top: 15),
-                  child: const Text(
-                    "NAME OF USER",
+                  child: Text(
+                    widget.userData['name'],
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   ),
                 ),
@@ -63,7 +67,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
               Center(
                 child: Container(
                   child: Text(
-                    "user_email@gmail.com",
+                    widget.userData['email'],
                     style:
                         TextStyle(fontSize: 14, color: Constants.accentColor),
                   ),
@@ -81,13 +85,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(60)),
                         elevation: 0),
-                    onPressed: () async {
-                      await Auth().signOut();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const WidgetTree()),
-                          (route) => false);
-                    },
+                    onPressed: () async {},
                     child: const Text(
                       "Edit Profile",
                       style: TextStyle(color: Colors.white, fontSize: 13),
@@ -125,8 +123,16 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    trailing:
-                        CupertinoSwitch(value: false, onChanged: (value) {}),
+                    trailing: CupertinoSwitch(
+                        activeColor: Constants.primaryColor,
+                        value: _isNotificationsOn,
+                        onChanged: (bool value) {
+                          setState(
+                            () {
+                              _isNotificationsOn = !_isNotificationsOn;
+                            },
+                          );
+                        }),
                   ),
                   CupertinoListTile.notched(
                     title: const Text(
@@ -165,7 +171,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           fontFamily: 'Open Sans',
                           fontWeight: FontWeight.normal),
                     )),
-                margin: const EdgeInsets.symmetric(horizontal: 25),
+                margin: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
                 children: [
                   CupertinoListTile.notched(
                     title: const Text(
@@ -213,7 +219,8 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                       await Auth().signOut();
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => const WidgetTree()),
+                          MaterialPageRoute(
+                              builder: (context) => const WidgetTree()),
                           (route) => false);
                     },
                     title: const Text(
@@ -241,7 +248,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
             ],
           ),
         ),
-      ]),
+      ),
     );
   }
 }

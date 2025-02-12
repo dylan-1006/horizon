@@ -48,6 +48,17 @@ class Auth {
     });
   }
 
+  String getUserId() {
+    try {
+      User? user = _firebaseAuth.currentUser;
+      String userId = user!.uid;
+      return userId;
+    } catch (e) {
+      print(e.toString());
+      return '';
+    }
+  }
+
   Future<void> resetPassword({required String email}) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
