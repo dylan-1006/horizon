@@ -2,12 +2,16 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
+import 'package:horizon/screens/settings_profile_screen.dart';
+import 'package:horizon/utils/database_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,6 +24,8 @@ class FitbitAuthorisationScreen extends StatefulWidget {
 }
 
 class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
+  Map<String, dynamic> userData = {};
+  late String userId;
   final webController = WebViewController();
   final ValueNotifier<bool> isLoading = ValueNotifier(true);
   String? authorizationCode;
@@ -101,9 +107,31 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
       // Store these tokens securely for future API calls
       print("Access Token: $accessToken");
       print("Refresh Token: $refreshToken");
+      await fetchUserData();
+      await DatabaseUtils.updateDocument("users", userId, {
+        "isFitBitAuthorised": true,
+        "fitbitAccessToken": accessToken,
+        "fitbitRefreshToken": refreshToken,
+        "tokenUpdatedAt": FieldValue.serverTimestamp(),
+      });
+
+      _showAuthorisationSuccessfulDialog();
     } else {
-      print("Failed to get token: ${response.body}");
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ErrorScreen(navigateTo: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (route) => false);
+                  })));
     }
+  }
+
+  Future<void> fetchUserData() async {
+    userId = await Auth().getUserId();
+    userData = await DatabaseUtils.getUserData(userId);
   }
 
   void generateCodeVerifierAndChallenge() {
@@ -183,6 +211,41 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
         false;
   }
 
+  Future<bool> _showAuthorisationSuccessfulDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Authorisation Successful",
+                style: TextStyle(
+                    color: Constants.primaryColor, fontWeight: FontWeight.bold),
+              ),
+              content: const Text(
+                  "Your Fitbit account has been successfully authorized."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsProfileScreen(
+                                  userData: userData,
+                                )),
+                        (route) => false);
+                  },
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(color: Constants.primaryColor),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   void _handleBackButtonPressed() async {
     bool shouldGoBack = await _showExitConfirmationDialog();
     if (shouldGoBack) {
@@ -194,6 +257,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Container(

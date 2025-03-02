@@ -13,21 +13,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> userData = {};
-  Future<void> fetchData() async {
+  Future<void> fetchUserData() async {
     String userId = await Auth().getUserId();
-    userData = await getUserData(userId);
-  }
-
-  static Future<Map<String, dynamic>> getUserData(String userId) async {
-    final userSnapshot = await DatabaseUtils.readDocument('users', userId);
-    Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-    return userData;
+    userData = await DatabaseUtils.getUserData(userId);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: fetchData(),
+      future: fetchUserData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();
