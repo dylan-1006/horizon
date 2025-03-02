@@ -72,6 +72,7 @@ flutter:
     - assets/images/home_screen_background.png
     - assets/images/settings_screen_background.png
     - assets/images/default_user_profile_picture.jpg
+    - assets/images/error_screen_icon.png
 
   fonts:
     - family: Garamond
