@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/error_screen.dart';
+import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -42,13 +44,6 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
           isLoading.value = false;
         },
         onUrlChange: (change) async {
-          // if (change.url!.contains("horizon-0000.web.app/open?code")) {
-          //   webController.loadRequest(Uri.parse('about:blank'));
-          //   final Uri uri = Uri.parse(change.url!);
-          //   authorization_code = uri.queryParameters['code'];
-
-          //   _handleFinalRedirectUrl(change.url!);
-          // }
           if (change.url!.contains("$redirectUri?code=")) {
             final Uri uri = Uri.parse(change.url!);
             authorizationCode = uri.queryParameters['code'];
@@ -62,6 +57,17 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
               await exchangeAuthorizationCodeForToken(authorizationCode!);
               isLoading.value = true;
             }
+          } else if (change.url!.contains("$redirectUri?error_description")) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ErrorScreen(navigateTo: () {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                              (route) => false);
+                        })));
           }
         },
       ),
