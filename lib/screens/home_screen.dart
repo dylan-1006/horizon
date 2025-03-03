@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:horizon/auth.dart';
+import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
 import 'package:horizon/utils/database_utils.dart';
+import 'package:horizon/utils/navigation_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();
+        } else if (snapshot.hasError) {
+          return ErrorScreen(onRefresh: () {});
         } else {
           return Scaffold(
             backgroundColor: const Color(0xfff2f2f7),
@@ -55,12 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SettingsProfileScreen(
-                                          userData: userData,
-                                        )));
+                            NavigationUtils.push(
+                                context, SettingsProfileScreen());
                           },
                           child: Container(
                             width: 45,

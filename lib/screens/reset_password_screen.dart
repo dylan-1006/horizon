@@ -6,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/widget_tree.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -80,10 +81,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12))),
                         onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WidgetTree()));
+                          NavigationUtils.pushReplacement(
+                              context, WidgetTree());
                         },
                         child: const Center(
                           child: Text(

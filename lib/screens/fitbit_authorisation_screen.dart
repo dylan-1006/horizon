@@ -12,6 +12,7 @@ import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
 import 'package:horizon/utils/database_utils.dart';
+import 'package:horizon/utils/navigation_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,16 +65,9 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
               isLoading.value = true;
             }
           } else if (change.url!.contains("$redirectUri?error_description")) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ErrorScreen(navigateTo: () {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                              (route) => false);
-                        })));
+            NavigationUtils.push(context, ErrorScreen(onRefresh: () {
+              NavigationUtils.pushAndRemoveUntil(context, HomeScreen());
+            }));
           }
         },
       ),
@@ -115,17 +109,11 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
         "tokenUpdatedAt": FieldValue.serverTimestamp(),
       });
 
-      _showAuthorisationSuccessfulDialog();
+      _handleReturnToProfileScreen();
     } else {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ErrorScreen(navigateTo: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                        (route) => false);
-                  })));
+      NavigationUtils.push(context, ErrorScreen(onRefresh: () {
+        NavigationUtils.pushAndRemoveUntil(context, HomeScreen());
+      }));
     }
   }
 
@@ -226,13 +214,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingsProfileScreen(
-                                  userData: userData,
-                                )),
-                        (route) => false);
+                    Navigator.of(context).pop(true);
                   },
                   child: const Text(
                     "Continue",
@@ -244,6 +226,13 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
           },
         ) ??
         false;
+  }
+
+  void _handleReturnToProfileScreen() async {
+    bool shouldGoBack = await _showAuthorisationSuccessfulDialog();
+    if (shouldGoBack) {
+      NavigationUtils.popUntil(context, 2);
+    }
   }
 
   void _handleBackButtonPressed() async {

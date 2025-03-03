@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:horizon/constants.dart';
 
 class ErrorScreen extends StatelessWidget {
-  final VoidCallback navigateTo;
+  final VoidCallback onRefresh;
 
-  const ErrorScreen({required this.navigateTo, super.key});
+  const ErrorScreen({required this.onRefresh, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class ErrorScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12))),
                   onPressed: () async {
-                    navigateTo();
+                    onRefresh();
                   },
                   child: const Center(
                     child: Text(

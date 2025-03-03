@@ -7,6 +7,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/login_screen.dart';
+import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/widget_tree.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -53,7 +54,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Expanded(
                     child: Container(
-                      margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
+                      margin:
+                          const EdgeInsets.only(left: 35, right: 35, top: 20),
                       child: const Text(
                         textAlign: TextAlign.center,
                         "We're thrilled to have you on board and can't wait for you to explore and achieve great things with us.",
@@ -73,10 +75,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12))),
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const WidgetTree()));
+                        NavigationUtils.pushReplacement(
+                            context, const WidgetTree());
                       },
                       child: const Center(
                         child: Text(
@@ -418,10 +418,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const WidgetTree()));
+                            NavigationUtils.pushReplacement(
+                                context, const WidgetTree());
                           },
                           child: Container(
                             child: const Text("Sign In",
