@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/fitbit_authorisation_screen.dart';
+import 'package:horizon/utils/fitbit_auth_utils.dart';
 import 'package:horizon/widget_tree.dart';
 
 class SettingsProfileScreen extends StatefulWidget {
@@ -15,6 +16,13 @@ class SettingsProfileScreen extends StatefulWidget {
 
 class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   bool _isNotificationsOn = false;
+  late bool isAccountFitBitAuthorised;
+
+  void initState() {
+    super.initState();
+    isAccountFitBitAuthorised = widget.userData['isFitBitAuthorised'] ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,14 +163,21 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                       ),
                     ),
                     trailing: const CupertinoListTileChevron(),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  FitbitAuthorisationScreen()));
+                    onTap: () async {
+                      if (!isAccountFitBitAuthorised) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    FitbitAuthorisationScreen()));
+                      } else {
+                        String userId = await Auth().getUserId();
+                        FitbitAuthUtils.refreshAccessToken(userId);
+                      }
                     },
-                    additionalInfo: const Text("Not connected"),
+                    additionalInfo: Text(isAccountFitBitAuthorised
+                        ? "Connected"
+                        : "Not connected"),
                   ),
                 ],
               ),
