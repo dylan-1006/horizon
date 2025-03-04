@@ -17,7 +17,7 @@ class ErrorScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/error_screen_icon.png',
+                'assets/icons/error_screen_icon.png',
                 height: 150,
               ),
               SizedBox(height: 24),

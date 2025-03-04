@@ -28,6 +28,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
   Map<String, dynamic> userData = {};
   late String userId;
   final webController = WebViewController();
+  final cookieManager = WebViewCookieManager();
   final ValueNotifier<bool> isLoading = ValueNotifier(true);
   String? authorizationCode;
   late String codeVerifier;
@@ -36,13 +37,10 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
   final String clientId = "23Q7ZV";
   final String redirectUri = "https://horizon-0000.web.app/open";
   final String tokenUrl = "https://api.fitbit.com/oauth2/token";
+  Future<void> _initializeWebView() async {
+    await cookieManager.clearCookies(); 
+    await webController.clearCache(); 
 
-  void initState() {
-    super.initState();
-    authoriseUser();
-    webController.clearCache();
-    final cookieManager = WebViewCookieManager();
-    cookieManager.clearCookies();
     webController.setJavaScriptMode(JavaScriptMode.unrestricted);
     webController.setNavigationDelegate(
       NavigationDelegate(
@@ -57,10 +55,6 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
             final Uri uri = Uri.parse(change.url!);
             authorizationCode = uri.queryParameters['code'];
             webController.loadRequest(Uri.parse('about:blank'));
-            print("this is the code from handle final redirect url " +
-                authorizationCode.toString());
-            print("this is the url from handle final redirect url " +
-                change.url!);
 
             if (authorizationCode != null) {
               await exchangeAuthorizationCodeForToken(authorizationCode!);
@@ -74,6 +68,13 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
         },
       ),
     );
+
+    authoriseUser();
+  }
+
+  void initState() {
+    super.initState();
+    _initializeWebView();
   }
 
   Future<void> exchangeAuthorizationCodeForToken(String authCode) async {
@@ -100,7 +101,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
       String accessToken = responseData["access_token"];
       String refreshToken = responseData["refresh_token"];
       print(responseData);
-      // Store these tokens securely for future API calls
+
       print("Access Token: $accessToken");
       print("Refresh Token: $refreshToken");
       await fetchUserData();
