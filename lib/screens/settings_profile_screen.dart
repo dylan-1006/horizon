@@ -21,10 +21,53 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   bool _isNotificationsOn = false;
   late bool isAccountFitBitAuthorised;
   Map<String, dynamic> userData = {};
+  late String userId;
   Future<void> fetchUserData() async {
-    String userId = await Auth().getUserId();
+    userId = await Auth().getUserId();
     userData = await DatabaseUtils.getUserData(userId);
     isAccountFitBitAuthorised = userData['isFitBitAuthorised'] ?? false;
+  }
+
+  Future<bool> _showExitConfirmationDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Fitbit Account Already Linked",
+                style: TextStyle(
+                  color: Constants.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: const Text(
+                  "You have already linked a Fitbit account with Horizon. Reauthorize with a different Fitbit account?\n\nNote: One Fitbit account can only connect to one Horizon user."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: const Text(
+                    "No",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    DatabaseUtils.updateDocument(
+                        "users", userId, {"isFitBitAuthorised": false});
+                    NavigationUtils.push(context, FitbitAuthorisationScreen());
+                  },
+                  child: const Text(
+                    "Yes",
+                    style: TextStyle(color: Constants.primaryColor),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   void initState() {
@@ -188,8 +231,9 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                                 NavigationUtils.push(
                                     context, FitbitAuthorisationScreen());
                               } else {
-                                String userId = await Auth().getUserId();
-                                FitbitAuthUtils.refreshAccessToken(userId);
+                                _showExitConfirmationDialog();
+
+                                // FitbitAuthUtils.refreshAccessToken(userId);
                               }
                             },
                             additionalInfo: Text(isAccountFitBitAuthorised
