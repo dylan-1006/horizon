@@ -38,8 +38,8 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
   final String redirectUri = "https://horizon-0000.web.app/open";
   final String tokenUrl = "https://api.fitbit.com/oauth2/token";
   Future<void> _initializeWebView() async {
-    await cookieManager.clearCookies(); 
-    await webController.clearCache(); 
+    await cookieManager.clearCookies();
+    await webController.clearCache();
 
     webController.setJavaScriptMode(JavaScriptMode.unrestricted);
     webController.setNavigationDelegate(
@@ -234,7 +234,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
   void _handleReturnToProfileScreen() async {
     bool shouldGoBack = await _showAuthorisationSuccessfulDialog();
     if (shouldGoBack) {
-      NavigationUtils.popUntil(context, 2);
+      NavigationUtils.popUntil(context, 1);
     }
   }
 

@@ -211,20 +211,20 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                               style: TextStyle(fontFamily: 'Open Sans'),
                             ),
                             leading: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(7),
-                                  border: Border.all(
-                                      color: Constants.accentColor,
-                                      width: 0.5)),
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: const Icon(
-                                size: 20,
-                                Icons.heart_broken,
-                                color: Colors.red,
-                              ),
-                            ),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(7),
+                                    border: Border.all(
+                                        color: Constants.accentColor,
+                                        width: 0.5)),
+                                width: double.infinity,
+                                height: double.infinity,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: const Image(
+                                      image: AssetImage(
+                                          "assets/icons/fitbit_icon.png")),
+                                )),
                             trailing: const CupertinoListTileChevron(),
                             onTap: () async {
                               if (!isAccountFitBitAuthorised) {
@@ -232,8 +232,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                                     context, FitbitAuthorisationScreen());
                               } else {
                                 _showExitConfirmationDialog();
-
-                                // FitbitAuthUtils.refreshAccessToken(userId);
                               }
                             },
                             additionalInfo: Text(isAccountFitBitAuthorised
