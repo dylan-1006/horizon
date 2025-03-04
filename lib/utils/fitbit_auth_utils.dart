@@ -68,7 +68,7 @@ class FitbitAuthUtils {
         String newRefreshToken = data["refresh_token"];
         int expiresIn = data["expires_in"];
 
-        DateTime newExpiryTime = updatedTime.add(Duration(seconds: expiresIn));
+        DateTime newExpiryTime = currentTime.add(Duration(seconds: expiresIn));
 
         await DatabaseUtils.updateDocument("users", userId, {
           "fitbitAccessToken": newAccessToken,

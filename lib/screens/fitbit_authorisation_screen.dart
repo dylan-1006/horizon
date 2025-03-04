@@ -40,7 +40,9 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
   void initState() {
     super.initState();
     authoriseUser();
-
+    webController.clearCache();
+    final cookieManager = WebViewCookieManager();
+    cookieManager.clearCookies();
     webController.setJavaScriptMode(JavaScriptMode.unrestricted);
     webController.setNavigationDelegate(
       NavigationDelegate(
