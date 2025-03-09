@@ -53,10 +53,11 @@ class _ChartSectionState extends State<ChartSection> {
   }
 
   List<Map<String, dynamic>> _parseActivityData(Map<String, dynamic> data) {
+    print(data);
     if (data['activities-steps'] == null) return [];
     return (data['activities-steps'] as List)
         .map((entry) => {
-              'date': entry['dateTime'],
+              'dateTime': entry['dateTime'],
               'steps': entry['value'],
             })
         .toList();
@@ -121,7 +122,7 @@ class _ChartSectionState extends State<ChartSection> {
           Flexible(
             fit: FlexFit.loose,
             child: chartData.isEmpty
-                ? Center(child: Text("No data available"))
+                ? Center(child: Text("No data availablesss"))
                 : SelectedChartWidget(
                     chartType: selectedChartType, chartData: chartData),
           ),

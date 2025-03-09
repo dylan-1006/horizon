@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:horizon/auth.dart';
+import 'package:horizon/constants.dart';
 import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
@@ -35,7 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
       var data = await DatabaseUtils.getUserData(userId);
 
       final today = DateTime.now().toString().split(' ')[0];
-      fitBitData = await FitbitApiUtils().fetchAllDataLast30Days(userId);
+      var newFitBitData = await FitbitApiUtils().fetchAllDataLast30Days(userId);
+
+      // Update the state with setState to trigger a rebuild
+      setState(() {
+        fitBitData = {};
+        userData = data;
+        fitBitData = newFitBitData;
+      });
     } catch (e) {
       debugPrint('Error fetching user data: $e');
     }
@@ -55,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: const Color(0xfff2f2f7),
             extendBodyBehindAppBar: true,
             body: RefreshIndicator(
+              color: Constants.primaryColor,
               onRefresh: fetchAllData,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -123,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
 
                           // Fetch only sleep data
-                          final sleepData =
-                              await fitbitApiUtils.fetchSleepLast30Days(userId);
+                          final sleepData = await fitbitApiUtils
+                              .fetchActivityLast30Days(userId, 'steps');
 
                           // Dismiss loading indicator
                           Navigator.pop(context);

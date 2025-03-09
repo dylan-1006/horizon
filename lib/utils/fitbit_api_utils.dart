@@ -4,13 +4,15 @@ import 'package:intl/intl.dart'; // For date formatting
 import 'package:horizon/utils/fitbit_auth_utils.dart';
 
 class FitbitApiUtils {
-  static const String baseUrl = "https://api.fitbit.com/1.2/user/-";
+  static const String baseUrlV1 = "https://api.fitbit.com/1/user/-";
+  static const String baseUrlV1_2 = "https://api.fitbit.com/1.2/user/-";
 
   /// Fetches latest access token and makes API requests
-  Future<Map<String, dynamic>?> _fetchFitbitData(
-      String userId, String endpoint) async {
+  Future<Map<String, dynamic>?> _fetchFitbitData(String userId, String endpoint,
+      {bool useSleepApi = false}) async {
     try {
       String? accessToken = await FitbitAuthUtils.refreshAccessToken(userId);
+      final baseUrl = useSleepApi ? baseUrlV1_2 : baseUrlV1;
 
       if (accessToken == null) {
         print("Failed to retrieve access token");
@@ -45,7 +47,8 @@ class FitbitApiUtils {
   /// Fetch Sleep Data
   Future<Map<String, dynamic>?> fetchSleepData(
       String userId, String date) async {
-    return await _fetchFitbitData(userId, "/sleep/date/$date.json");
+    return await _fetchFitbitData(userId, "/sleep/date/$date.json",
+        useSleepApi: true);
   }
 
   /// Fetch User Activity Data
@@ -79,8 +82,6 @@ class FitbitApiUtils {
     };
   }
 
-  /// Fetches latest access token and makes API requests
-
   /// Helper function to generate date range strings
   String _getDateRange(int days) {
     String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -98,7 +99,8 @@ class FitbitApiUtils {
   /// Fetch Sleep Data for the last 30 days
   Future<Map<String, dynamic>?> fetchSleepLast30Days(String userId) async {
     return await _fetchFitbitData(
-        userId, "/sleep/date/${_getDateRange(30)}.json");
+        userId, "/sleep/date/${_getDateRange(30)}.json",
+        useSleepApi: true);
   }
 
   /// Fetch Activity (Steps, Calories, etc.) for the last 30 days
@@ -119,15 +121,15 @@ class FitbitApiUtils {
       String userId) async {
     final results = await Future.wait([
       fetchSleepLast30Days(userId),
-      // fetchHRVLast30Days(userId),
-      fetchActivityLast30Days(userId, "steps"),
+      fetchHRVLast30Days(userId),
+      fetchActivityLast30Days(userId, 'steps'),
       fetchHeartRateLast30Days(userId),
     ]);
 
     return {
       'sleep': results[0],
       'hrv': results[1],
-      'activities-steps': results[2],
+      'activity': results[2],
       'heart_rate': results[3],
     };
   }
