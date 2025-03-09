@@ -26,7 +26,7 @@ class FitbitAuthUtils {
     }
   }
 
-  static Future<void> refreshAccessToken(String userId) async {
+  static Future<String?> refreshAccessToken(String userId) async {
     try {
       Map<String, dynamic> userData = await DatabaseUtils.getUserData(userId);
 
@@ -78,11 +78,14 @@ class FitbitAuthUtils {
         });
 
         print("Access token refreshed successfully!");
+        return newAccessToken;
       } else {
         print("Failed to refresh access token: ${response.body}");
+        return null;
       }
     } catch (e) {
       print("Error refreshing access token: $e");
+      return null;
     }
   }
 }

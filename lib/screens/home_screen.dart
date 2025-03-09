@@ -5,6 +5,9 @@ import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
 import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
+import 'package:horizon/utils/fitbit_api_utils.dart';
+import 'dart:convert';
+import 'dart:math' show min;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> userData = {};
   late Future<void> _fetchUserDataFuture;
+  late String userId;
 
   @override
   void initState() {
@@ -25,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchUserData() async {
     try {
-      String userId = await Auth().getUserId();
+      userId = await Auth().getUserId();
       var data = await DatabaseUtils.getUserData(userId);
       setState(() {
         userData = data;
@@ -100,6 +104,63 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Container(
                         child: const Text("daily reflection."),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final fitbitApiUtils = FitbitApiUtils();
+                          final today = DateTime.now()
+                              .toString()
+                              .split(' ')[0]; // Format: YYYY-MM-DD
+
+                          // Show loading indicator
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => const Center(
+                                child: CircularProgressIndicator()),
+                          );
+
+                          // Fetch only sleep data
+                          final sleepData = await fitbitApiUtils
+                              .fetchActivityData(userId, today);
+
+                          // Dismiss loading indicator
+                          Navigator.pop(context);
+                          print(sleepData);
+                          // Display the data
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Fitbit Sleep Data'),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(sleepData != null
+                                        ? jsonEncode(sleepData).substring(
+                                                0,
+                                                min(
+                                                    jsonEncode(sleepData)
+                                                        .length,
+                                                    300)) +
+                                            (jsonEncode(sleepData).length > 300
+                                                ? '...'
+                                                : '')
+                                        : 'No sleep data available'),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Close'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: const Text('Fetch Sleep Data'),
                       ),
                     ],
                   ),

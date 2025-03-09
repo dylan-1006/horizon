@@ -28,7 +28,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     isAccountFitBitAuthorised = userData['isFitBitAuthorised'] ?? false;
   }
 
-  Future<bool> _showExitConfirmationDialog() async {
+  Future<bool> _showReauthoriseConfirmationDialog() async {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
@@ -231,7 +231,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                                 NavigationUtils.push(
                                     context, FitbitAuthorisationScreen());
                               } else {
-                                _showExitConfirmationDialog();
+                                _showReauthoriseConfirmationDialog();
                               }
                             },
                             additionalInfo: Text(isAccountFitBitAuthorised
