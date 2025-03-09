@@ -6,6 +6,7 @@ import 'package:horizon/screens/settings_profile_screen.dart';
 import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/utils/fitbit_api_utils.dart';
+import 'package:horizon/widgets/chart_section_widget.dart';
 import 'dart:convert';
 import 'dart:math' show min;
 
@@ -18,22 +19,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> userData = {};
+  Map<String, Map<String, dynamic>?> fitBitData = {};
   late Future<void> _fetchUserDataFuture;
   late String userId;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserDataFuture = fetchUserData();
+    _fetchUserDataFuture = fetchAllData();
   }
 
-  Future<void> fetchUserData() async {
+  Future<void> fetchAllData() async {
     try {
       userId = await Auth().getUserId();
       var data = await DatabaseUtils.getUserData(userId);
-      setState(() {
-        userData = data;
-      });
+
+      final today = DateTime.now().toString().split(' ')[0];
+      fitBitData = await FitbitApiUtils().fetchAllDataLast30Days(userId);
     } catch (e) {
       debugPrint('Error fetching user data: $e');
     }
@@ -47,13 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingScreen();
         } else if (snapshot.hasError) {
-          return ErrorScreen(onRefresh: fetchUserData);
+          return ErrorScreen(onRefresh: fetchAllData);
         } else {
           return Scaffold(
             backgroundColor: const Color(0xfff2f2f7),
             extendBodyBehindAppBar: true,
             body: RefreshIndicator(
-              onRefresh: fetchUserData,
+              onRefresh: fetchAllData,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Container(
@@ -121,8 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
 
                           // Fetch only sleep data
-                          final sleepData = await fitbitApiUtils
-                              .fetchActivityData(userId, today);
+                          final sleepData =
+                              await fitbitApiUtils.fetchSleepLast30Days(userId);
 
                           // Dismiss loading indicator
                           Navigator.pop(context);
@@ -162,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: const Text('Fetch Sleep Data'),
                       ),
+                      ChartSection(fitbitData: fitBitData),
                     ],
                   ),
                 ),

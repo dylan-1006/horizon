@@ -1,10 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class ActivityChart extends StatelessWidget {
+class ActivityChartWidget extends StatelessWidget {
   final List<Map<String, dynamic>> activityData; // List of steps data
 
-  ActivityChart({required this.activityData});
+  ActivityChartWidget({required this.activityData});
 
   @override
   Widget build(BuildContext context) {

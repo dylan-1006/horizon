@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart'; // For date formatting
 import 'package:horizon/utils/fitbit_auth_utils.dart';
 
 class FitbitApiUtils {
-  static const String baseUrl = "https://api.fitbit.com/1/user/-";
+  static const String baseUrl = "https://api.fitbit.com/1.2/user/-";
 
   /// Fetches latest access token and makes API requests
   Future<Map<String, dynamic>?> _fetchFitbitData(
@@ -74,6 +75,59 @@ class FitbitApiUtils {
       'sleep': results[0],
       'hrv': results[1],
       'activity': results[2],
+      'heart_rate': results[3],
+    };
+  }
+
+  /// Fetches latest access token and makes API requests
+
+  /// Helper function to generate date range strings
+  String _getDateRange(int days) {
+    String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    String startDate = DateFormat('yyyy-MM-dd')
+        .format(DateTime.now().subtract(Duration(days: days)));
+    return "$startDate/$endDate";
+  }
+
+  /// Fetch HRV Data for the last 30 days
+  Future<Map<String, dynamic>?> fetchHRVLast30Days(String userId) async {
+    return await _fetchFitbitData(
+        userId, "/hrv/date/${_getDateRange(30)}.json");
+  }
+
+  /// Fetch Sleep Data for the last 30 days
+  Future<Map<String, dynamic>?> fetchSleepLast30Days(String userId) async {
+    return await _fetchFitbitData(
+        userId, "/sleep/date/${_getDateRange(30)}.json");
+  }
+
+  /// Fetch Activity (Steps, Calories, etc.) for the last 30 days
+  Future<Map<String, dynamic>?> fetchActivityLast30Days(
+      String userId, String resourcePath) async {
+    return await _fetchFitbitData(
+        userId, "/activities/$resourcePath/date/${_getDateRange(30)}.json");
+  }
+
+  /// Fetch Heart Rate for the last 30 days
+  Future<Map<String, dynamic>?> fetchHeartRateLast30Days(String userId) async {
+    return await _fetchFitbitData(
+        userId, "/activities/heart/date/${_getDateRange(30)}.json");
+  }
+
+  /// Fetch all relevant Fitbit data for the last 30 days
+  Future<Map<String, Map<String, dynamic>?>> fetchAllDataLast30Days(
+      String userId) async {
+    final results = await Future.wait([
+      fetchSleepLast30Days(userId),
+      // fetchHRVLast30Days(userId),
+      fetchActivityLast30Days(userId, "steps"),
+      fetchHeartRateLast30Days(userId),
+    ]);
+
+    return {
+      'sleep': results[0],
+      'hrv': results[1],
+      'activities-steps': results[2],
       'heart_rate': results[3],
     };
   }
