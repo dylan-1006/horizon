@@ -46,6 +46,7 @@ dependencies:
   crypto: ^3.0.6
   http: ^1.3.0
   fl_chart: ^0.66.1
+  segmented_button_slide: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,7 @@ flutter:
     - assets/images/default_user_profile_picture.jpg
     - assets/icons/error_screen_icon.png
     - assets/icons/fitbit_icon.png
+    - assets/images/breathing_exercise_screen_background.png
 
   fonts:
     - family: Garamond

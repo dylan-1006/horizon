@@ -74,7 +74,12 @@ class _ChartSectionState extends State<ChartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25), // 25% opacity black
+            blurRadius: 4, // Blur: 4
+            offset: const Offset(0, 4), // X: 0, Y: 4
+            spreadRadius: 0, // Spread: 0
+          ),
         ],
       ),
       child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:horizon/constants.dart';
-// import 'package:horizon/screens/breathing_exercise_screen.dart';
+import 'package:horizon/screens/breathing_exercise_screen.dart';
+import 'package:horizon/utils/navigation_utils.dart';
 
 class BreathingExerciseWidget extends StatelessWidget {
   final VoidCallback? onTap;
@@ -10,17 +11,21 @@ class BreathingExerciseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap ??
-          () {
-            // Navigate to the breathing exercise screen
-          },
+      onTap: () {
+        NavigationUtils.push(context, BreathingExerciseScreen());
+      },
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25), // 25% opacity black
+              blurRadius: 4, // Blur: 4
+              offset: const Offset(0, 4), // X: 0, Y: 4
+              spreadRadius: 0, // Spread: 0
+            ),
           ],
         ),
         child: Column(
@@ -31,7 +36,8 @@ class BreathingExerciseWidget extends StatelessWidget {
               child: RichText(
                 text: TextSpan(
                   style: TextStyle(
-                    fontSize: 17,
+                    fontFamily: 'Open Sans',
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   children: [
@@ -77,6 +83,7 @@ class BreathingExerciseWidget extends StatelessWidget {
                     child: Text(
                       "START",
                       style: TextStyle(
+                        fontFamily: 'Open Sans',
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
