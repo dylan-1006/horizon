@@ -101,28 +101,48 @@ class _ChartSectionState extends State<ChartSection> {
                     selectedChartType = value!;
                   });
                 },
-                items: ["HRV", "Avg Sleep Time", "Activity"].map((type) {
-                  return DropdownMenuItem(
-                    value: type == "Avg Sleep Time" ? "Sleep" : type,
-                    child: Container(
-                      child: Text(
-                        type,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                items: [
+                  DropdownMenuItem(
+                    value: "HRV",
+                    child: Text(
+                      "Heart Rate Variability",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                  DropdownMenuItem(
+                    value: "Sleep",
+                    child: Text(
+                      "Avg Sleep Time",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: "Activity",
+                    child: Text(
+                      "Activity",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
           Flexible(
             fit: FlexFit.loose,
             child: chartData.isEmpty
-                ? Center(child: Text("No data availablesss"))
+                ? Center(child: Text("No data available"))
                 : SelectedChartWidget(
                     chartType: selectedChartType, chartData: chartData),
           ),

@@ -132,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
 
                           // Fetch only sleep data
-                          final sleepData = await fitbitApiUtils
-                              .fetchActivityLast30Days(userId, 'steps');
+                          final sleepData =
+                              await fitbitApiUtils.fetchHRVLast30Days(userId);
 
                           // Dismiss loading indicator
                           Navigator.pop(context);
