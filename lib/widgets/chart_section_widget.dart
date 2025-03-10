@@ -72,7 +72,7 @@ class _ChartSectionState extends State<ChartSection> {
       padding: const EdgeInsets.only(left: 20, right: 25, bottom: 15, top: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
         ],
