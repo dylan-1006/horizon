@@ -47,7 +47,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   Timer? _instructionTimer;
   int _breathCount = 0;
   late BreathingDuration _selectedDuration;
-  int _selected = 0;
+  int _selected = 1;
   BreathingPhase _currentPhase = BreathingPhase.inhale;
 
   void _toggleBreathing() {
