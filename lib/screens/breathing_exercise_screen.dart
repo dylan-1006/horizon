@@ -47,7 +47,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   Timer? _instructionTimer;
   int _breathCount = 0;
   late BreathingDuration _selectedDuration;
-  int _selected = 1;
+  int _selected = 0;
   BreathingPhase _currentPhase = BreathingPhase.inhale;
 
   void _toggleBreathing() {
@@ -84,7 +84,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   @override
   void initState() {
     super.initState();
-    _selectedDuration = BreathingDuration.medium;
+    _selectedDuration = BreathingDuration.quick;
     _animationController = AnimationController(
       vsync: this,
       duration: widget.inhaleDuration,
@@ -315,17 +315,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                )
-                                    // child: Text(
-                                    //   _buttonText,
-                                    //   style: const TextStyle(
-                                    //     fontFamily: 'Open Sans',
-                                    //     color: Colors.white,
-                                    //     fontSize: 20,
-                                    //     fontWeight: FontWeight.bold,
-                                    //   ),
-                                    // ),
-                                    ),
+                                )),
                               ),
                             ),
                           ],
