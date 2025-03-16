@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'dart:async';
-
 import 'package:horizon/constants.dart';
 import 'package:segmented_button_slide/segmented_button_slide.dart';
 
-enum BreathingDuration {
-  quick,
-  medium,
-  long,
-}
+enum BreathingDuration { quick, medium, long }
 
-enum BreathingPhase {
-  inhale,
-  hold,
-  exhale,
-}
+enum BreathingPhase { inhale, hold, exhale }
 
 class BreathingExerciseScreen extends StatefulWidget {
   final int totalBreaths;
@@ -43,9 +33,9 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool _isBreathingActive = false;
-
-  Timer? _instructionTimer;
+  Timer? _instructionTimer, _countdownTimer;
   int _breathCount = 0;
+  int _remainingTime = 0;
   late BreathingDuration _selectedDuration;
   int _selected = 0;
   BreathingPhase _currentPhase = BreathingPhase.inhale;
@@ -62,21 +52,46 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     setState(() {
       _isBreathingActive = true;
       _currentPhase = BreathingPhase.inhale;
+      switch (_selectedDuration) {
+        case BreathingDuration.quick:
+          _remainingTime = 60; // 1 minute
+          break;
+        case BreathingDuration.medium:
+          _remainingTime = 180; // 3 minutes
+          break;
+        case BreathingDuration.long:
+          _remainingTime = 300; // 5 minutes
+          break;
+      }
     });
+
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+      setState(() {
+        if (_remainingTime > 0)
+          _remainingTime--;
+        else
+          _stopBreathing();
+      });
+    });
+
     _animationController.forward();
   }
 
   void _stopBreathing() {
+    _countdownTimer?.cancel();
     _animationController.reset();
     setState(() {
       _isBreathingActive = false;
       _currentPhase = BreathingPhase.inhale;
+      _remainingTime = 0;
     });
   }
 
   @override
   void dispose() {
     _instructionTimer?.cancel();
+    _countdownTimer?.cancel();
     _animationController.dispose();
     super.dispose();
   }
@@ -127,15 +142,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   int get totalBreaths {
     switch (_selectedDuration) {
       case BreathingDuration.quick:
-        return 5; // 1 minute total (12s per cycle * 5 = 60s)
+        return 5;
       case BreathingDuration.medium:
-        return 13; // 3 minutes total (14s per cycle * 13 = 182s)
+        return 13;
       case BreathingDuration.long:
-        return 17; // 5 minutes total (18s per cycle * 17 = 306s)
+        return 17;
     }
   }
 
-// Keep all existing duration getters the same:
   Duration get inhaleDuration {
     switch (_selectedDuration) {
       case BreathingDuration.quick:
@@ -180,24 +194,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     }
   }
 
-  String get durationText {
-    switch (_selectedDuration) {
-      case BreathingDuration.quick:
-        return "1 minute";
-      case BreathingDuration.medium:
-        return "3 minutes";
-      case BreathingDuration.long:
-        return "5 minutes";
-    }
+  String _formatDuration(int seconds) {
+    return '${(seconds ~/ 60).toString().padLeft(2, '0')}:${(seconds % 60).toString().padLeft(2, '0')}';
   }
 
   void _updateDuration(BreathingDuration newDuration) {
-    if (_isBreathingActive)
-      return; // Don't allow changes during active exercise
-
+    if (_isBreathingActive) return;
     setState(() {
       _selectedDuration = newDuration;
-      // Update animation controller duration
       _animationController.duration = inhaleDuration;
     });
   }
@@ -210,11 +214,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        leading: Container(
-          child: const BackButton(
-            color: Colors.black,
-          ),
-        ),
+        leading: const BackButton(color: Colors.black),
       ),
       body: Container(
         height: double.infinity,
@@ -232,9 +232,15 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 40),
                   child: Text(
-                    durationText, // Using the dynamic duration text
+                    _isBreathingActive
+                        ? _formatDuration(_remainingTime)
+                        : _selectedDuration == BreathingDuration.quick
+                            ? "1 minute"
+                            : _selectedDuration == BreathingDuration.medium
+                                ? "3 minutes"
+                                : "5 minutes",
                     style: TextStyle(
                       fontFamily: 'Open Sans',
                       fontSize: 16,
@@ -247,14 +253,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   child: Center(
                     child: RichText(
                       text: TextSpan(
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Open Sans',
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                         children: [
-                          const TextSpan(text: "Take a breath for "),
+                          TextSpan(text: "Take a breath for "),
                           TextSpan(
                             text: "Balance",
                             style: TextStyle(color: Constants.primaryColor),
@@ -272,7 +278,6 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                         return Stack(
                           alignment: Alignment.center,
                           children: [
-                            // Outer circle
                             Container(
                               width: 240 * _animation.value,
                               height: 240 * _animation.value,
@@ -281,7 +286,6 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                                 color: Color(0xffCCD0F5),
                               ),
                             ),
-                            // Middle circle
                             Container(
                               width: 200 * _animation.value,
                               height: 200 * _animation.value,
@@ -290,7 +294,6 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                                 color: Color(0xff7984E4),
                               ),
                             ),
-                            // Inner circle (button)
                             GestureDetector(
                               onTap: _toggleBreathing,
                               child: Container(
@@ -301,21 +304,22 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                                   color: Constants.primaryColor,
                                 ),
                                 child: Center(
-                                    child: Text(
-                                  _isBreathingActive
-                                      ? _currentPhase
-                                          .toString()
-                                          .split('.')
-                                          .last
-                                          .toUpperCase()
-                                      : "START",
-                                  style: TextStyle(
-                                    fontFamily: 'Open Sans',
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                  child: Text(
+                                    _isBreathingActive
+                                        ? _currentPhase
+                                            .toString()
+                                            .split('.')
+                                            .last
+                                            .toUpperCase()
+                                        : "START",
+                                    style: const TextStyle(
+                                      fontFamily: 'Open Sans',
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                )),
+                                ),
                               ),
                             ),
                           ],
@@ -325,24 +329,17 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 40, bottom: 40),
+                  margin: const EdgeInsets.only(top: 40, bottom: 40),
                   child: SegmentedButtonSlide(
                     entries: const [
-                      SegmentedButtonSlideEntry(
-                        label: "Quick",
-                      ),
-                      SegmentedButtonSlideEntry(
-                        label: "Medium",
-                      ),
-                      SegmentedButtonSlideEntry(
-                        label: "Long",
-                      ),
+                      SegmentedButtonSlideEntry(label: "Quick"),
+                      SegmentedButtonSlideEntry(label: "Medium"),
+                      SegmentedButtonSlideEntry(label: "Long"),
                     ],
                     selectedEntry: _selected,
                     onChange: (selected) {
                       setState(() {
                         _selected = selected;
-                        // Update the breathing duration based on selection
                         switch (selected) {
                           case 0:
                             _selectedDuration = BreathingDuration.quick;
@@ -354,14 +351,13 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                             _selectedDuration = BreathingDuration.long;
                             break;
                         }
-                        // Update animation controller duration if needed
                         if (!_isBreathingActive) {
                           _animationController.duration = inhaleDuration;
                         }
                       });
                     },
                     colors: SegmentedButtonSlideColors(
-                      barColor: Color(0xffF2F2F7),
+                      barColor: const Color(0xffF2F2F7),
                       backgroundSelectedColor: Constants.primaryColor,
                     ),
                     animationDuration: const Duration(milliseconds: 350),
