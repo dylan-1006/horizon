@@ -10,16 +10,11 @@ class LoadingScreen extends StatelessWidget {
     return const Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(180),
-          child: Center(
-            child: LoadingIndicator(
-              indicatorType: Indicator.ballGridPulse,
-              colors: [
-                Constants.primaryColor,
-                Color.fromARGB(106, 48, 73, 234)
-              ],
-            ),
+        minimum: EdgeInsets.all(150),
+        child: Center(
+          child: LoadingIndicator(
+            indicatorType: Indicator.ballGridPulse,
+            colors: [Constants.primaryColor, Color.fromARGB(106, 48, 73, 234)],
           ),
         ),
       ),

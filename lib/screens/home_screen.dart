@@ -80,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SafeArea(
                     child: Column(
                       children: [
+                        // Assuming MoodAnimationWidget is a defined widget
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

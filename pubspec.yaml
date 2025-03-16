@@ -49,6 +49,8 @@ dependencies:
   segmented_button_slide: ^2.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.14.3"
+
   flutter_test:
     sdk: flutter
 
@@ -61,6 +63,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_name_icon.png"
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -77,6 +84,8 @@ flutter:
     - assets/icons/error_screen_icon.png
     - assets/icons/fitbit_icon.png
     - assets/images/breathing_exercise_screen_background.png
+    - assets/emoji_sprite_sheet.png
+    - assets/icons/app_name_icon.png
 
   fonts:
     - family: Garamond

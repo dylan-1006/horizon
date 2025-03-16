@@ -11,6 +11,12 @@ enum BreathingDuration {
   long,
 }
 
+enum BreathingPhase {
+  inhale,
+  hold,
+  exhale,
+}
+
 class BreathingExerciseScreen extends StatefulWidget {
   final int totalBreaths;
   final Duration inhaleDuration;
@@ -37,20 +43,12 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool _isBreathingActive = false;
-  String _buttonText = "START";
-  String _instructionText = " ";
+
   Timer? _instructionTimer;
   int _breathCount = 0;
   late BreathingDuration _selectedDuration;
   int _selected = 0;
-
-  void _setInstructionText(String text) {
-    if (mounted) {
-      setState(() {
-        _instructionText = text;
-      });
-    }
-  }
+  BreathingPhase _currentPhase = BreathingPhase.inhale;
 
   void _toggleBreathing() {
     if (_isBreathingActive) {
@@ -61,23 +59,18 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   }
 
   void _startBreathing() {
-    _instructionTimer?.cancel();
     setState(() {
       _isBreathingActive = true;
-      _buttonText = "STOP";
-      _breathCount = 0;
-      _instructionText = "Inhale";
+      _currentPhase = BreathingPhase.inhale;
     });
     _animationController.forward();
   }
 
   void _stopBreathing() {
     _animationController.reset();
-    _instructionTimer?.cancel();
     setState(() {
       _isBreathingActive = false;
-      _buttonText = "START";
-      _instructionText = "";
+      _currentPhase = BreathingPhase.inhale;
     });
   }
 
@@ -108,35 +101,24 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
       if (!mounted) return;
 
       if (status == AnimationStatus.completed) {
-        _animationController.reverse();
-        if (_isBreathingActive) {
-          _setInstructionText("Hold");
-          _instructionTimer?.cancel();
-          _instructionTimer = Timer(widget.holdDuration, () {
+        setState(() => _currentPhase = BreathingPhase.hold);
+        _instructionTimer = Timer(holdDuration, () {
+          if (_isBreathingActive && mounted) {
+            setState(() => _currentPhase = BreathingPhase.exhale);
+            _animationController.reverse();
+          }
+        });
+      } else if (status == AnimationStatus.dismissed) {
+        _breathCount++;
+        if (_breathCount >= totalBreaths) {
+          _stopBreathing();
+        } else {
+          setState(() => _currentPhase = BreathingPhase.inhale);
+          _instructionTimer = Timer(restDuration, () {
             if (_isBreathingActive && mounted) {
-              _setInstructionText("Exhale");
+              _animationController.forward();
             }
           });
-        }
-      } else if (status == AnimationStatus.dismissed) {
-        if (_isBreathingActive) {
-          _breathCount++;
-          if (_breathCount >= widget.totalBreaths) {
-            _stopBreathing();
-            if (mounted) {
-              Future.delayed(const Duration(seconds: 1), () {
-                if (mounted) Navigator.pop(context);
-              });
-            }
-          } else {
-            _instructionTimer?.cancel();
-            _instructionTimer = Timer(widget.restDuration, () {
-              if (_isBreathingActive && mounted) {
-                _animationController.forward();
-                _setInstructionText("Inhale");
-              }
-            });
-          }
         }
       }
     });
@@ -319,16 +301,31 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                                   color: Constants.primaryColor,
                                 ),
                                 child: Center(
-                                  child: Text(
-                                    _buttonText,
-                                    style: const TextStyle(
-                                      fontFamily: 'Open Sans',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    child: Text(
+                                  _isBreathingActive
+                                      ? _currentPhase
+                                          .toString()
+                                          .split('.')
+                                          .last
+                                          .toUpperCase()
+                                      : "START",
+                                  style: TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
+                                )
+                                    // child: Text(
+                                    //   _buttonText,
+                                    //   style: const TextStyle(
+                                    //     fontFamily: 'Open Sans',
+                                    //     color: Colors.white,
+                                    //     fontSize: 20,
+                                    //     fontWeight: FontWeight.bold,
+                                    //   ),
+                                    // ),
+                                    ),
                               ),
                             ),
                           ],

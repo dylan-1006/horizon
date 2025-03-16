@@ -366,12 +366,12 @@ class _HRVChartWidgetState extends State<HRVChartWidget> {
               child: Text(dateRangeText,
                   style: TextStyle(color: Constants.accentColor)),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
 
             // Legend Row
             buildLegendRow(),
 
-            SizedBox(height: 20),
+            SizedBox(height: 35),
 
             // Chart
             AspectRatio(
@@ -522,14 +522,17 @@ class _HRVChartWidgetState extends State<HRVChartWidget> {
   }
 
   Widget buildLegendRow() {
-    return Row(
-      children: [
-        _buildLegendItem('Low', '<80%', hrvZones['Low']!),
-        SizedBox(width: 16),
-        _buildLegendItem('Normal', '80-120%', hrvZones['Normal']!),
-        SizedBox(width: 16),
-        _buildLegendItem('Good', '>120%', hrvZones['Good']!),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          _buildLegendItem('Low', '<80%', hrvZones['Low']!),
+          SizedBox(width: 10),
+          _buildLegendItem('Normal', '80-120%', hrvZones['Normal']!),
+          SizedBox(width: 10),
+          _buildLegendItem('Good', '>120%', hrvZones['Good']!),
+        ],
+      ),
     );
   }
 }
