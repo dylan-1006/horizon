@@ -249,13 +249,13 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 30),
+                  margin: const EdgeInsets.only(top: 15, bottom: 20),
                   child: Center(
                     child: RichText(
                       text: TextSpan(
                         style: TextStyle(
                           fontFamily: 'Open Sans',
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -279,16 +279,16 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                           alignment: Alignment.center,
                           children: [
                             Container(
-                              width: 240 * _animation.value,
-                              height: 240 * _animation.value,
+                              width: 210 * _animation.value,
+                              height: 210 * _animation.value,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Color(0xffCCD0F5),
                               ),
                             ),
                             Container(
-                              width: 200 * _animation.value,
-                              height: 200 * _animation.value,
+                              width: 170 * _animation.value,
+                              height: 170 * _animation.value,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Color(0xff7984E4),
@@ -297,8 +297,8 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                             GestureDetector(
                               onTap: _toggleBreathing,
                               child: Container(
-                                width: 160 * _animation.value,
-                                height: 160 * _animation.value,
+                                width: 130 * _animation.value,
+                                height: 130 * _animation.value,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Constants.primaryColor,
@@ -329,7 +329,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 40, bottom: 40),
+                  margin: const EdgeInsets.only(top: 40, bottom: 50),
                   child: SegmentedButtonSlide(
                     entries: const [
                       SegmentedButtonSlideEntry(label: "Quick"),
@@ -375,13 +375,13 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(bottom: 80),
+                  margin: const EdgeInsets.only(bottom: 60),
                   child: Text(
                     "To lower stress levels, follow this breathing\nexercise and take slow, deep breaths",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Open Sans',
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Constants.accentColor,
                       height: 1.5,
                     ),

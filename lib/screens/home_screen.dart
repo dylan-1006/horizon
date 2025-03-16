@@ -80,7 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SafeArea(
                     child: Column(
                       children: [
-                        // Assuming MoodAnimationWidget is a defined widget
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -187,15 +186,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
                           child: Row(
                             children: [
-                              Expanded(
-                                flex: 1,
-                                child: BreathingExerciseWidget(),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                flex: 1,
-                                child: BreathingExerciseWidget(),
-                              ),
+                              BreathingExerciseWidget(),
+                              // Expanded(
+                              //   flex: 1,
+                              //   child: BreathingExerciseWidget(),
+                              // ),
+                              // SizedBox(width: 12),
+                              // Expanded(
+                              //   flex: 1,
+                              //   child: BreathingExerciseWidget(),
+                              // ),
                             ],
                           ),
                         ),
