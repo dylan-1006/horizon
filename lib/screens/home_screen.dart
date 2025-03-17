@@ -170,71 +170,51 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 50),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final fitbitApiUtils = FitbitApiUtils();
+                            final yesterday = DateTime.now()
+                                .subtract(Duration(days: 1))
+                                .toString()
+                                .split(' ')[0];
+                            final today = DateTime.now()
+                                .toString()
+                                .split(' ')[0]; // Format: YYYY-MM-DD
 
-                        SizedBox(height: 100),
+                            // Show loading indicator
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => const Center(
+                                  child: CircularProgressIndicator()),
+                            );
 
-                        // ElevatedButton(
-                        //   onPressed: () async {
-                        //     final fitbitApiUtils = FitbitApiUtils();
-                        //     final yesterday = DateTime.now()
-                        //         .subtract(Duration(days: 1))
-                        //         .toString()
-                        //         .split(' ')[0];
-                        //     final today = DateTime.now()
-                        //         .toString()
-                        //         .split(' ')[0]; // Format: YYYY-MM-DD
+                            Future.delayed(Duration(seconds: 5), () async {
+                              final sleepData = await PredictionUtils()
+                                  .sendPredictionRequest([
+                                60.75959491729736,
+                                40.021232323232326,
+                                27000321.036327794,
+                                393.07152914671923,
+                                56.625457617572515,
+                                93.77640101379893,
+                                9705,
+                                178,
+                                33,
+                                33,
+                                1196,
+                                -1.547862704
+                              ]);
+                              print(sleepData);
+                            });
 
-                        //     // Show loading indicator
-                        //     showDialog(
-                        //       context: context,
-                        //       barrierDismissible: false,
-                        //       builder: (context) => const Center(
-                        //           child: CircularProgressIndicator()),
-                        //     );
-
-                        //     // Fetch only sleep data
-                        //     final sleepData =
-                        //         await PredictionUtils().sendPredictionRequest([
-                        //       60.75959491729736,
-                        //       40.021232323232326,
-                        //       27000321.036327794,
-                        //       393.07152914671923,
-                        //       56.625457617572515,
-                        //       93.77640101379893,
-                        //       9705,
-                        //       178,
-                        //       33,
-                        //       33,
-                        //       1196,
-                        //       -1.547862704
-                        //     ]);
-
-                        //     Timer.periodic(Duration(seconds: 30),
-                        //         (timer) async {
-                        //       await PredictionUtils().sendPredictionRequest([
-                        //         60.75959491729736,
-                        //         40.021232323232326,
-                        //         27000321.036327794,
-                        //         393.07152914671923,
-                        //         56.625457617572515,
-                        //         93.77640101379893,
-                        //         9705,
-                        //         178,
-                        //         33,
-                        //         33,
-                        //         1196,
-                        //         -1.547862704
-                        //       ]);
-                        //     });
-                        //     print(sleepData);
-                        //     // Dismiss loading indicator
-                        //     Navigator.pop(context);
-
-                        //     // final processedData =
-                        //     //     fitbitApiUtils.processAllData(sleepData);
-                        //   },
-                        //   child: const Text('Fetch Sleep Data'),
-                        // ),
+                            // Dismiss loading indicator
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Demo Anxiety Trigger'),
+                        ),
+                        SizedBox(height: 40),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
                           child: Row(
@@ -277,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await PredictionUtils().sendPredictionRequest(extractedData);
     print(predictionResults);
 
-    Timer.periodic(Duration(seconds: 300), (timer) async {
+    Timer.periodic(Duration(seconds: 3000), (timer) async {
       final allData = await fitbitApiUtils.fetchAllData(userId, yesterday);
 
       final processedData = fitbitApiUtils.processAllData(allData);
