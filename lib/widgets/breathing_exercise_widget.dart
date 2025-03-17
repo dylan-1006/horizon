@@ -12,7 +12,7 @@ class BreathingExerciseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        NavigationUtils.push(context, BreathingExerciseScreen());
+        NavigationUtils.push(context, BreathingExerciseScreen(isTriggeredByPrediction: false));
       },
       child: Container(
         padding: const EdgeInsets.all(12),

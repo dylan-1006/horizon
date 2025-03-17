@@ -10,34 +10,18 @@ import 'package:horizon/screens/login_screen.dart';
 import 'package:horizon/screens/register_screen.dart';
 import 'package:horizon/screens/reset_password_screen.dart';
 import 'package:horizon/utils/notifications_utils.dart';
+import 'package:horizon/utils/prediction_utils.dart';
 import 'package:horizon/widget_tree.dart';
 import 'firebase_options.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await initNotifications();
   runApp(const MyApp());
 }
-
-// Future<void> initNotifications() async {
-//   // var initializationSettingsAndroid =
-//   //     const AndroidInitializationSettings('@mipmap/ic_launcher');
-
-//   // final InitializationSettings initializationSettings =
-//   //     InitializationSettings(android: initializationSettingsAndroid);
-
-//   // await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-//   //     onDidReceiveBackgroundNotificationResponse: (details) async {
-//   //   print('onDidReceiveNotificationResponse: $details');
-//   // });
-
-//   aw
-// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

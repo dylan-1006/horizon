@@ -13,6 +13,7 @@ class BreathingExerciseScreen extends StatefulWidget {
   final Duration holdDuration;
   final Duration exhaleDuration;
   final Duration restDuration;
+  final bool isTriggeredByPrediction;
 
   const BreathingExerciseScreen({
     Key? key,
@@ -21,6 +22,7 @@ class BreathingExerciseScreen extends StatefulWidget {
     this.holdDuration = const Duration(seconds: 2),
     this.exhaleDuration = const Duration(seconds: 4),
     this.restDuration = const Duration(seconds: 2),
+    required this.isTriggeredByPrediction,
   }) : super(key: key);
 
   @override
@@ -117,7 +119,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
 
       if (status == AnimationStatus.completed) {
         setState(() => _currentPhase = BreathingPhase.hold);
-        _instructionTimer = Timer(holdDuration, () {
+        _instructionTimer = Timer(widget.holdDuration, () {
           if (_isBreathingActive && mounted) {
             setState(() => _currentPhase = BreathingPhase.exhale);
             _animationController.reverse();
@@ -125,11 +127,11 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
         });
       } else if (status == AnimationStatus.dismissed) {
         _breathCount++;
-        if (_breathCount >= totalBreaths) {
+        if (_breathCount >= widget.totalBreaths) {
           _stopBreathing();
         } else {
           setState(() => _currentPhase = BreathingPhase.inhale);
-          _instructionTimer = Timer(restDuration, () {
+          _instructionTimer = Timer(widget.restDuration, () {
             if (_isBreathingActive && mounted) {
               _animationController.forward();
             }
@@ -137,6 +139,56 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
         }
       }
     });
+
+    // Show anxiety confirmation dialog if triggered by prediction
+    if (widget.isTriggeredByPrediction) {
+      // Use a post-frame callback to ensure the screen is built before showing dialog
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showAnxietyConfirmationDialog();
+      });
+    }
+  }
+
+  void _showAnxietyConfirmationDialog() {
+    showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Anxiety Detected",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+              "Your anxiety levels seem high. Would you like to continue with the breathing exercise?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Return to previous screen
+              },
+              child: const Text(
+                "False Alarm",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Just close the dialog and continue
+              },
+              child: const Text(
+                "Yes, continue",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   int get totalBreaths {
@@ -260,9 +312,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                           color: Colors.black,
                         ),
                         children: [
-                          TextSpan(text: "Take a breath for "),
                           TextSpan(
-                            text: "Balance",
+                              text: widget.isTriggeredByPrediction
+                                  ? "Breathe to reduce "
+                                  : "Take a breath for "),
+                          TextSpan(
+                            text: widget.isTriggeredByPrediction
+                                ? "Anxiety"
+                                : "Balance",
                             style: TextStyle(color: Constants.primaryColor),
                           ),
                         ],

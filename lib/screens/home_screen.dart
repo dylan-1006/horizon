@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/breathing_exercise_screen.dart';
 import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
@@ -11,6 +12,7 @@ import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/utils/fitbit_api_utils.dart';
 import 'package:horizon/utils/prediction_utils.dart';
+import 'package:horizon/widget_tree.dart';
 import 'package:horizon/widgets/chart_section_widget.dart';
 import 'package:horizon/widgets/breathing_exercise_widget.dart';
 import 'dart:convert';
@@ -24,6 +26,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   Map<String, dynamic> userData = {};
   Map<String, Map<String, dynamic>?> fitBitData = {};
   late Future<void> _fetchUserDataFuture;
@@ -32,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    initNotifications();
     _fetchUserDataFuture = fetchAllData();
     requestNotificationPermission();
   }
@@ -73,7 +78,63 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  
+  Future<void> initNotifications() async {
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) async {
+        print('onDidReceiveNotificationResponse: $details');
+        NavigationUtils.push(
+            context, BreathingExerciseScreen(isTriggeredByPrediction: true));
+        //_showAnxietyConfirmationDialog();
+      },
+    );
+  }
+
+  void _showAnxietyConfirmationDialog() async {
+    showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Anxiety Detected",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+              "Your anxiety levels seem high. Try some relaxation techniques."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                NavigationUtils.pushAndRemoveUntil(context, const WidgetTree());
+              },
+              child: const Text(
+                "False Alarm",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                NavigationUtils.push(context,
+                    BreathingExerciseScreen(isTriggeredByPrediction: false));
+              },
+              child: const Text(
+                "Yes",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
