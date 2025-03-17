@@ -1,27 +1,47 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/fitbit_authorisation_screen.dart';
 import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:horizon/screens/register_screen.dart';
 import 'package:horizon/screens/reset_password_screen.dart';
+import 'package:horizon/utils/notifications_utils.dart';
 import 'package:horizon/widget_tree.dart';
 import 'firebase_options.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initNotifications();
   runApp(const MyApp());
 }
+
+// Future<void> initNotifications() async {
+//   // var initializationSettingsAndroid =
+//   //     const AndroidInitializationSettings('@mipmap/ic_launcher');
+
+//   // final InitializationSettings initializationSettings =
+//   //     InitializationSettings(android: initializationSettingsAndroid);
+
+//   // await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//   //     onDidReceiveBackgroundNotificationResponse: (details) async {
+//   //   print('onDidReceiveNotificationResponse: $details');
+//   // });
+
+//   aw
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,6 +72,5 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return WidgetTree();
-    //return ErrorScreen();
   }
 }

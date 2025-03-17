@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/error_screen.dart';
@@ -7,6 +10,7 @@ import 'package:horizon/screens/settings_profile_screen.dart';
 import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/utils/fitbit_api_utils.dart';
+import 'package:horizon/utils/prediction_utils.dart';
 import 'package:horizon/widgets/chart_section_widget.dart';
 import 'package:horizon/widgets/breathing_exercise_widget.dart';
 import 'dart:convert';
@@ -29,6 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchUserDataFuture = fetchAllData();
+    requestNotificationPermission();
+  }
+
+  Future<void> requestNotificationPermission() async {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    final bool? granted =
+        await androidImplementation!.requestNotificationsPermission();
+
+    if (granted ?? false) {
+      debugPrint("Notification permission granted");
+    } else {
+      debugPrint("Notification permission denied");
+    }
   }
 
   Future<void> fetchAllData() async {
@@ -49,6 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint('Error fetching user data: $e');
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ElevatedButton(
                           onPressed: () async {
                             final fitbitApiUtils = FitbitApiUtils();
+                            final yesterday = DateTime.now()
+                                .subtract(Duration(days: 1))
+                                .toString()
+                                .split(' ')[0];
                             final today = DateTime.now()
                                 .toString()
                                 .split(' ')[0]; // Format: YYYY-MM-DD
@@ -140,45 +169,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             // Fetch only sleep data
                             final sleepData =
-                                await fitbitApiUtils.fetchHRVLast30Days(userId);
+                                await PredictionUtils().sendPredictionRequest([
+                              60.75959491729736,
+                              40.021232323232326,
+                              27000321.036327794,
+                              393.07152914671923,
+                              56.625457617572515,
+                              93.77640101379893,
+                              9705,
+                              178,
+                              33,
+                              33,
+                              1196,
+                              -1.547862704
+                            ]);
 
+                            Timer.periodic(Duration(seconds: 30),
+                                (timer) async {
+                              await PredictionUtils().sendPredictionRequest([
+                                60.75959491729736,
+                                40.021232323232326,
+                                27000321.036327794,
+                                393.07152914671923,
+                                56.625457617572515,
+                                93.77640101379893,
+                                9705,
+                                178,
+                                33,
+                                33,
+                                1196,
+                                -1.547862704
+                              ]);
+                            });
+                            print(sleepData);
                             // Dismiss loading indicator
                             Navigator.pop(context);
-                            print(sleepData);
-                            // Display the data
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Fitbit Sleep Data'),
-                                content: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(sleepData != null
-                                          ? jsonEncode(sleepData).substring(
-                                                  0,
-                                                  min(
-                                                      jsonEncode(sleepData)
-                                                          .length,
-                                                      300)) +
-                                              (jsonEncode(sleepData).length >
-                                                      300
-                                                  ? '...'
-                                                  : '')
-                                          : 'No sleep data available'),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('Close'),
-                                  ),
-                                ],
-                              ),
-                            );
+
+                            // final processedData =
+                            //     fitbitApiUtils.processAllData(sleepData);
                           },
                           child: const Text('Fetch Sleep Data'),
                         ),

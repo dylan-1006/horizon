@@ -19,6 +19,7 @@ class SettingsProfileScreen extends StatefulWidget {
 
 class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   bool _isNotificationsOn = false;
+  
   late bool isAccountFitBitAuthorised;
   Map<String, dynamic> userData = {};
   late String userId;

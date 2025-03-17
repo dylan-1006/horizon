@@ -2,10 +2,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // For date formatting
 import 'package:horizon/utils/fitbit_auth_utils.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FitbitApiUtils {
   static const String baseUrlV1 = "https://api.fitbit.com/1/user/-";
   static const String baseUrlV1_2 = "https://api.fitbit.com/1.2/user/-";
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   /// Fetches latest access token and makes API requests
   Future<Map<String, dynamic>?> _fetchFitbitData(String userId, String endpoint,
@@ -44,6 +48,13 @@ class FitbitApiUtils {
     return await _fetchFitbitData(userId, "/hrv/date/$date.json");
   }
 
+  /// Fetch Heart Rate)
+  Future<Map<String, dynamic>?> fetchHeartRate(
+      String userId, String date) async {
+    return await _fetchFitbitData(
+        userId, "/activities/heart/date/$date/1d.json");
+  }
+
   /// Fetch Sleep Data
   Future<Map<String, dynamic>?> fetchSleepData(
       String userId, String date) async {
@@ -51,34 +62,45 @@ class FitbitApiUtils {
         useSleepApi: true);
   }
 
-  /// Fetch User Activity Data
+  /// Fetch Activity Data
   Future<Map<String, dynamic>?> fetchActivityData(
-      String userId, String date) async {
-    return await _fetchFitbitData(userId, "/activities/date/$date.json");
+      String userId, String resourcePath, String date) async {
+    return await _fetchFitbitData(
+        userId, "/activities/$resourcePath/date/$date/1d.json");
   }
 
-  /// Fetch multiple data types at once (Sleep, HRV, Activity)
-  Future<Map<String, dynamic>?> fetchHeartRate(
+  Future<Map<String, dynamic>?> fetchSkinTemperatureData(
       String userId, String date) async {
-    return await _fetchFitbitData(
-        userId, "/activities/heart/date/$date/1d.json");
+    return await _fetchFitbitData(userId, "/temp/skin/date/$date.json");
   }
 
   /// Fetch all relevant Fitbit data for the day
   Future<Map<String, Map<String, dynamic>?>> fetchAllData(
       String userId, String date) async {
     final results = await Future.wait([
-      fetchSleepData(userId, date),
-      fetchHRV(userId, date),
-      fetchActivityData(userId, date),
       fetchHeartRate(userId, date),
+      fetchHRV(userId, date),
+      fetchSleepData(userId, date),
+      fetchActivityData(userId, 'steps', date),
+      fetchActivityData(userId, 'minutesLightlyActive', date),
+      fetchActivityData(userId, 'minutesFairlyActive', date),
+      fetchActivityData(userId, 'minutesVeryActive', date),
+      fetchActivityData(userId, 'minutesSedentary', date),
+      fetchSkinTemperatureData(userId, date),
     ]);
 
     return {
-      'sleep': results[0],
+      'heart_rate': results[0],
       'hrv': results[1],
-      'activity': results[2],
-      'heart_rate': results[3],
+      'sleep': results[2],
+      'activity': {
+        'steps': results[3],
+        'minutesLightlyActive': results[4],
+        'minutesFairlyActive': results[5],
+        'minutesVeryActive': results[6],
+        'minutesSedentary': results[7],
+      },
+      'skin_temperature': results[8],
     };
   }
 
@@ -110,12 +132,6 @@ class FitbitApiUtils {
         userId, "/activities/$resourcePath/date/${_getDateRange(30)}.json");
   }
 
-  /// Fetch Heart Rate for the last 30 days
-  Future<Map<String, dynamic>?> fetchHeartRateLast30Days(String userId) async {
-    return await _fetchFitbitData(
-        userId, "/activities/heart/date/${_getDateRange(30)}.json");
-  }
-
   /// Fetch all relevant Fitbit data for the last 30 days
   Future<Map<String, Map<String, dynamic>?>> fetchAllDataLast30Days(
       String userId) async {
@@ -123,14 +139,110 @@ class FitbitApiUtils {
       fetchSleepLast30Days(userId),
       fetchHRVLast30Days(userId),
       fetchActivityLast30Days(userId, 'steps'),
-      fetchHeartRateLast30Days(userId),
     ]);
 
     return {
       'sleep': results[0],
       'hrv': results[1],
       'activity': results[2],
-      'heart_rate': results[3],
     };
+  }
+
+  /// Process all Fitbit data to extract only the needed fields
+  Map<String, dynamic> processAllData(
+      Map<String, Map<String, dynamic>?> rawData) {
+    Map<String, dynamic> processedData = {};
+
+    // Process heart rate data
+    if (rawData['heart_rate'] != null) {
+      try {
+        var restingHeartRate = rawData['heart_rate']!['activities-heart'][0]
+            ['value']['restingHeartRate'];
+        processedData['resting_heart_rate'] = restingHeartRate;
+      } catch (e) {
+        print("Error processing heart rate data: $e");
+      }
+    }
+
+    // Process HRV data
+    if (rawData['hrv'] != null) {
+      try {
+        var hrvData = rawData['hrv'];
+        print("this is hrv " + hrvData.toString());
+      } catch (e) {
+        print("Error processing HRV data: $e");
+      }
+    }
+
+    // Process sleep data
+    if (rawData['sleep'] != null) {
+      try {
+        var sleepSummary = rawData['sleep']!['summary'];
+        processedData['sleep_duration'] = sleepSummary['duration'];
+        processedData['sleep_efficiency'] = sleepSummary['efficiency'];
+
+        // Add the additional fields from the first sleep record if available
+        if (rawData['sleep']!['sleep'] != null &&
+            rawData['sleep']!['sleep'].isNotEmpty) {
+          var sleepRecord = rawData['sleep']!['sleep'][0];
+          processedData['minutes_asleep'] = sleepRecord['minutesAsleep'];
+          processedData['minutes_awake'] = sleepRecord['minutesAwake'];
+        }
+      } catch (e) {
+        print("Error processing sleep data: $e");
+      }
+    }
+
+    // Process activity data
+    //   if (rawData['activity'] != null) {
+    //     try {
+    //       // Steps
+    //       if (rawData['activity']['steps'] != null) {
+    //         processedData['steps'] =
+    //             rawData['activity']['steps']!['activities-steps'][0]['value'];
+    //       }
+
+    //       // Active minutes
+    //       if (rawData['activity']['minutesLightlyActive'] != null) {
+    //         processedData['minutes_lightly_active'] = rawData['activity']
+    //                 ['minutesLightlyActive']!['activities-minutesLightlyActive']
+    //             [0]['value'];
+    //       }
+
+    //       if (rawData['activity']['minutesFairlyActive'] != null) {
+    //         processedData['minutes_fairly_active'] = rawData['activity']
+    //                 ['minutesFairlyActive']!['activities-minutesFairlyActive'][0]
+    //             ['value'];
+    //       }
+
+    //       if (rawData['activity']['minutesVeryActive'] != null) {
+    //         processedData['minutes_very_active'] = rawData['activity']
+    //                 ['minutesVeryActive']!['activities-minutesVeryActive'][0]
+    //             ['value'];
+    //       }
+
+    //       if (rawData['activity']['minutesSedentary'] != null) {
+    //         processedData['minutes_sedentary'] = rawData['activity']
+    //             ['minutesSedentary']!['activities-minutesSedentary'][0]['value'];
+    //       }
+    //     } catch (e) {
+    //       print("Error processing activity data: $e");
+    //     }
+    //   }
+
+    //   // Process skin temperature data
+    //   if (rawData['skin_temperature'] != null) {
+    //     try {
+    //       var tempData = rawData['skin_temperature']!['tempSkin'];
+    //       if (tempData.isNotEmpty) {
+    //         processedData['skin_temperature'] =
+    //             tempData[0]['value']['nightlyRelative'];
+    //       }
+    //     } catch (e) {
+    //       print("Error processing skin temperature data: $e");
+    //     }
+    //   }
+
+    return processedData;
   }
 }

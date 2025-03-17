@@ -154,7 +154,7 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
         "?client_id=$clientId"
         "&response_type=code"
         "&redirect_uri=$redirectUri"
-        "&scope=activity heartrate sleep"
+        "&scope=activity heartrate sleep temperature"
         "&code_challenge=$codeChallenge"
         "&code_challenge_method=S256";
 
