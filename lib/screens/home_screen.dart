@@ -18,6 +18,8 @@ import 'package:horizon/widgets/breathing_exercise_widget.dart';
 import 'dart:convert';
 import 'dart:math' show min;
 
+import 'package:horizon/widgets/last_anxiety_widget.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -220,6 +222,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .toString()
                                 .split(' ')[0]; // Format: YYYY-MM-DD
 
+                            // Fetch only sleep data
+                            final sleepData = await fitbitApiUtils.fetchAllData(
+                                userId, today);
+
+                            final processedData =
+                                fitbitApiUtils.processAllData(sleepData);
+                            print(processedData);
+                          },
+                          child: const Text('Fetch all Data'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final fitbitApiUtils = FitbitApiUtils();
+                            final yesterday = DateTime.now()
+                                .subtract(Duration(days: 1))
+                                .toString()
+                                .split(' ')[0];
+                            final today = DateTime.now()
+                                .toString()
+                                .split(' ')[0]; // Format: YYYY-MM-DD
+
                             // Show loading indicator
                             showDialog(
                               context: context,
@@ -275,16 +298,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
                           child: Row(
                             children: [
-                              BreathingExerciseWidget(),
-                              // Expanded(
-                              //   flex: 1,
-                              //   child: BreathingExerciseWidget(),
-                              // ),
-                              // SizedBox(width: 12),
-                              // Expanded(
-                              //   flex: 1,
-                              //   child: BreathingExerciseWidget(),
-                              // ),
+                              Expanded(child: BreathingExerciseWidget()),
+                              const SizedBox(width: 10),
+                              Expanded(child: LastAnxietyWidget()),
                             ],
                           ),
                         ),

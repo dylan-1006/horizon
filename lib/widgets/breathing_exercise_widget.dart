@@ -12,7 +12,8 @@ class BreathingExerciseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        NavigationUtils.push(context, BreathingExerciseScreen(isTriggeredByPrediction: false));
+        NavigationUtils.push(
+            context, BreathingExerciseScreen(isTriggeredByPrediction: false));
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -37,7 +38,7 @@ class BreathingExerciseWidget extends StatelessWidget {
                 text: TextSpan(
                   style: TextStyle(
                     fontFamily: 'Open Sans',
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                   children: [
@@ -57,24 +58,24 @@ class BreathingExerciseWidget extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Container(
-                  width: 150,
-                  height: 150,
+                  width: 140,
+                  height: 140,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xffCCD0F5),
                   ),
                 ),
                 Container(
-                  width: 120,
-                  height: 120,
+                  width: 110,
+                  height: 110,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xff7984E4),
                   ),
                 ),
                 Container(
-                  width: 90,
-                  height: 90,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Constants.primaryColor,
