@@ -75,6 +75,9 @@ class _HomeScreenState extends State<HomeScreen> {
         userData = data;
         fitBitData = newFitBitData;
       });
+      if (userData['isFitBitAuthorised'] == true) {
+        startBackgroundDataFetch();
+      }
     } catch (e) {
       debugPrint('Error fetching user data: $e');
     }
@@ -93,47 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
         print('onDidReceiveNotificationResponse: $details');
         NavigationUtils.push(
             context, BreathingExerciseScreen(isTriggeredByPrediction: true));
-        //_showAnxietyConfirmationDialog();
-      },
-    );
-  }
-
-  void _showAnxietyConfirmationDialog() async {
-    showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Anxiety Detected",
-            style: TextStyle(
-              color: Constants.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: const Text(
-              "Your anxiety levels seem high. Try some relaxation techniques."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                NavigationUtils.pushAndRemoveUntil(context, const WidgetTree());
-              },
-              child: const Text(
-                "False Alarm",
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                NavigationUtils.push(context,
-                    BreathingExerciseScreen(isTriggeredByPrediction: false));
-              },
-              child: const Text(
-                "Yes",
-                style: TextStyle(color: Constants.primaryColor),
-              ),
-            ),
-          ],
-        );
       },
     );
   }
@@ -208,92 +170,71 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        Container(
-                          child: const Text("daily reflection."),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final fitbitApiUtils = FitbitApiUtils();
-                            final yesterday = DateTime.now()
-                                .subtract(Duration(days: 1))
-                                .toString()
-                                .split(' ')[0];
-                            final today = DateTime.now()
-                                .toString()
-                                .split(' ')[0]; // Format: YYYY-MM-DD
 
-                            // Fetch only sleep data
-                            final sleepData = await fitbitApiUtils.fetchAllData(
-                                userId, today);
+                        SizedBox(height: 100),
 
-                            final processedData =
-                                fitbitApiUtils.processAllData(sleepData);
-                            print(processedData);
-                          },
-                          child: const Text('Fetch all Data'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final fitbitApiUtils = FitbitApiUtils();
-                            final yesterday = DateTime.now()
-                                .subtract(Duration(days: 1))
-                                .toString()
-                                .split(' ')[0];
-                            final today = DateTime.now()
-                                .toString()
-                                .split(' ')[0]; // Format: YYYY-MM-DD
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     final fitbitApiUtils = FitbitApiUtils();
+                        //     final yesterday = DateTime.now()
+                        //         .subtract(Duration(days: 1))
+                        //         .toString()
+                        //         .split(' ')[0];
+                        //     final today = DateTime.now()
+                        //         .toString()
+                        //         .split(' ')[0]; // Format: YYYY-MM-DD
 
-                            // Show loading indicator
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) => const Center(
-                                  child: CircularProgressIndicator()),
-                            );
+                        //     // Show loading indicator
+                        //     showDialog(
+                        //       context: context,
+                        //       barrierDismissible: false,
+                        //       builder: (context) => const Center(
+                        //           child: CircularProgressIndicator()),
+                        //     );
 
-                            // Fetch only sleep data
-                            final sleepData =
-                                await PredictionUtils().sendPredictionRequest([
-                              60.75959491729736,
-                              40.021232323232326,
-                              27000321.036327794,
-                              393.07152914671923,
-                              56.625457617572515,
-                              93.77640101379893,
-                              9705,
-                              178,
-                              33,
-                              33,
-                              1196,
-                              -1.547862704
-                            ]);
+                        //     // Fetch only sleep data
+                        //     final sleepData =
+                        //         await PredictionUtils().sendPredictionRequest([
+                        //       60.75959491729736,
+                        //       40.021232323232326,
+                        //       27000321.036327794,
+                        //       393.07152914671923,
+                        //       56.625457617572515,
+                        //       93.77640101379893,
+                        //       9705,
+                        //       178,
+                        //       33,
+                        //       33,
+                        //       1196,
+                        //       -1.547862704
+                        //     ]);
 
-                            Timer.periodic(Duration(seconds: 30),
-                                (timer) async {
-                              await PredictionUtils().sendPredictionRequest([
-                                60.75959491729736,
-                                40.021232323232326,
-                                27000321.036327794,
-                                393.07152914671923,
-                                56.625457617572515,
-                                93.77640101379893,
-                                9705,
-                                178,
-                                33,
-                                33,
-                                1196,
-                                -1.547862704
-                              ]);
-                            });
-                            print(sleepData);
-                            // Dismiss loading indicator
-                            Navigator.pop(context);
+                        //     Timer.periodic(Duration(seconds: 30),
+                        //         (timer) async {
+                        //       await PredictionUtils().sendPredictionRequest([
+                        //         60.75959491729736,
+                        //         40.021232323232326,
+                        //         27000321.036327794,
+                        //         393.07152914671923,
+                        //         56.625457617572515,
+                        //         93.77640101379893,
+                        //         9705,
+                        //         178,
+                        //         33,
+                        //         33,
+                        //         1196,
+                        //         -1.547862704
+                        //       ]);
+                        //     });
+                        //     print(sleepData);
+                        //     // Dismiss loading indicator
+                        //     Navigator.pop(context);
 
-                            // final processedData =
-                            //     fitbitApiUtils.processAllData(sleepData);
-                          },
-                          child: const Text('Fetch Sleep Data'),
-                        ),
+                        //     // final processedData =
+                        //     //     fitbitApiUtils.processAllData(sleepData);
+                        //   },
+                        //   child: const Text('Fetch Sleep Data'),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
                           child: Row(
@@ -315,5 +256,39 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
     );
+  }
+
+  Future<void> startBackgroundDataFetch() async {
+    print("Background fetch started");
+    final fitbitApiUtils = FitbitApiUtils();
+    final yesterday =
+        DateTime.now().subtract(Duration(days: 1)).toString().split(' ')[0];
+    final today = DateTime.now().toString().split(' ')[0]; // Format: YYYY-MM-DD
+
+    final allData = await fitbitApiUtils.fetchAllData(userId, yesterday);
+
+    final processedData = fitbitApiUtils.processAllData(allData);
+    print(processedData);
+
+    List<num> extractedData =
+        PredictionUtils.extractNumericValues(processedData);
+    print(extractedData);
+    final predictionResults =
+        await PredictionUtils().sendPredictionRequest(extractedData);
+    print(predictionResults);
+
+    Timer.periodic(Duration(seconds: 300), (timer) async {
+      final allData = await fitbitApiUtils.fetchAllData(userId, yesterday);
+
+      final processedData = fitbitApiUtils.processAllData(allData);
+      print(processedData);
+
+      List<num> extractedData =
+          PredictionUtils.extractNumericValues(processedData);
+      print(extractedData);
+      final predictionResults =
+          await PredictionUtils().sendPredictionRequest(extractedData);
+      print(predictionResults);
+    });
   }
 }

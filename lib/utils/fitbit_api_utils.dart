@@ -167,19 +167,18 @@ class FitbitApiUtils {
     // Process HRV data
     if (rawData['hrv'] != null) {
       try {
-        var hrvData = rawData['hrv'];
-        print("this is hrv " + hrvData.toString());
+        var hrvRmssd = rawData['hrv']!['hrv'][0]['value']['deepRmssd'];
+        processedData['hrvRmssd'] = hrvRmssd;
       } catch (e) {
-        print("Error processing HRV data: $e");
+        print("Error processing hrv data: $e");
       }
     }
 
     // Process sleep data
     if (rawData['sleep'] != null) {
       try {
-        var sleepSummary = rawData['sleep']!['summary'];
+        var sleepSummary = rawData['sleep']!['sleep'][0];
         processedData['sleep_duration'] = sleepSummary['duration'];
-        processedData['sleep_efficiency'] = sleepSummary['efficiency'];
 
         // Add the additional fields from the first sleep record if available
         if (rawData['sleep']!['sleep'] != null &&
@@ -188,60 +187,62 @@ class FitbitApiUtils {
           processedData['minutes_asleep'] = sleepRecord['minutesAsleep'];
           processedData['minutes_awake'] = sleepRecord['minutesAwake'];
         }
+        processedData['sleep_efficiency'] = sleepSummary['efficiency'];
       } catch (e) {
         print("Error processing sleep data: $e");
       }
     }
 
     // Process activity data
-    //   if (rawData['activity'] != null) {
-    //     try {
-    //       // Steps
-    //       if (rawData['activity']['steps'] != null) {
-    //         processedData['steps'] =
-    //             rawData['activity']['steps']!['activities-steps'][0]['value'];
-    //       }
+    if (rawData['activity'] != null) {
+      try {
+        // Steps
+        if (rawData['activity']!['steps'] != null) {
+          var activitySteps =
+              rawData['activity']!['steps']['activities-steps'][0];
+          processedData['steps'] = double.parse( activitySteps['value']);
+        }
 
-    //       // Active minutes
-    //       if (rawData['activity']['minutesLightlyActive'] != null) {
-    //         processedData['minutes_lightly_active'] = rawData['activity']
-    //                 ['minutesLightlyActive']!['activities-minutesLightlyActive']
-    //             [0]['value'];
-    //       }
+        // // Active minutes
+        if (rawData['activity']!['minutesLightlyActive'] != null) {
+          processedData['minutes_lightly_active'] = double.parse( rawData['activity']![
+                  'minutesLightlyActive']!['activities-minutesLightlyActive'][0]
+              ['value']);
+        }
 
-    //       if (rawData['activity']['minutesFairlyActive'] != null) {
-    //         processedData['minutes_fairly_active'] = rawData['activity']
-    //                 ['minutesFairlyActive']!['activities-minutesFairlyActive'][0]
-    //             ['value'];
-    //       }
+        if (rawData['activity']!['minutesFairlyActive'] != null) {
+          processedData['minutes_fairly_active'] = double.parse(
+              rawData['activity']!['minutesFairlyActive']![
+                  'activities-minutesFairlyActive'][0]['value']);
+        }
 
-    //       if (rawData['activity']['minutesVeryActive'] != null) {
-    //         processedData['minutes_very_active'] = rawData['activity']
-    //                 ['minutesVeryActive']!['activities-minutesVeryActive'][0]
-    //             ['value'];
-    //       }
+        if (rawData['activity']!['minutesVeryActive'] != null) {
+          processedData['minutes_very_active'] = double.parse(
+              rawData['activity']!['minutesVeryActive']![
+                  'activities-minutesVeryActive'][0]['value']);
+        }
 
-    //       if (rawData['activity']['minutesSedentary'] != null) {
-    //         processedData['minutes_sedentary'] = rawData['activity']
-    //             ['minutesSedentary']!['activities-minutesSedentary'][0]['value'];
-    //       }
-    //     } catch (e) {
-    //       print("Error processing activity data: $e");
-    //     }
-    //   }
+        if (rawData['activity']!['minutesSedentary'] != null) {
+          processedData['minutes_sedentary'] = double.parse(
+              rawData['activity']!['minutesSedentary']![
+                  'activities-minutesSedentary'][0]['value']);
+        }
+      } catch (e) {
+        print("Error processing activity data: $e");
+      }
+    }
 
-    //   // Process skin temperature data
-    //   if (rawData['skin_temperature'] != null) {
-    //     try {
-    //       var tempData = rawData['skin_temperature']!['tempSkin'];
-    //       if (tempData.isNotEmpty) {
-    //         processedData['skin_temperature'] =
-    //             tempData[0]['value']['nightlyRelative'];
-    //       }
-    //     } catch (e) {
-    //       print("Error processing skin temperature data: $e");
-    //     }
-    //   }
+    // Process skin temperature data
+    if (rawData['skin_temperature'] != null) {
+      try {
+        var tempData = rawData['skin_temperature']!['tempSkin'][0]['value'];
+        if (tempData.isNotEmpty) {
+          processedData['skin_temperature'] = tempData['nightlyRelative'];
+        }
+      } catch (e) {
+        print("Error processing skin temperature data: $e");
+      }
+    }
 
     return processedData;
   }

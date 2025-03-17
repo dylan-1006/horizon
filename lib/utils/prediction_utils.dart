@@ -6,7 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PredictionUtils {
   Future<Map<String, dynamic>?> sendPredictionRequest(
-      List<double> features) async {
+      List<num> features) async {
     try {
       final response = await http.post(
         Uri.parse('https://predict-function-lmxo3hxzeq-uc.a.run.app/predict'),
@@ -34,6 +34,14 @@ class PredictionUtils {
     }
   }
 
+  static List<num> extractNumericValues(Map<String, dynamic> data) {
+    //Iterate through the data map and extract numeric values
+    return data.values
+        .where((value) => value is num) // Filter only numeric values
+        .map((numValue) => numValue as num) // Cast to num type
+        .toList();
+  }
+
   Future<void> processPredictionResult(Map<String, dynamic> result) async {
     if (result.containsKey('prediction') && result.containsKey('probability')) {
       final prediction = result['prediction'][0];
@@ -46,11 +54,6 @@ class PredictionUtils {
         await _showAnxietyNotification();
         return;
       }
-
-      // Alternative check: if second probability value is high regardless of prediction
-      // if (probabilities.length > 1 && probabilities[1] > 0.8) {
-      //   await _showAnxietyNotification();
-      // }
     }
   }
 
@@ -71,7 +74,4 @@ class PredictionUtils {
       ),
     );
   }
-
-
-
 }
