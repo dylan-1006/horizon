@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> initNotifications() async {
     var initializationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('@mipmap/launcher_icon');
 
     final InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
