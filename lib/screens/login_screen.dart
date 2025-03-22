@@ -8,6 +8,7 @@ import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/register_screen.dart';
 import 'package:horizon/screens/reset_password_screen.dart';
+import 'package:horizon/utils/navigation_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -76,16 +77,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Constants.primaryColor, width: 1.5)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Colors.black, width: 1)),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 1)),
                           errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Colors.red, width: 1)),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 1)),
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Colors.red, width: 1))),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 1))),
                     ),
                   ),
                   Container(
@@ -130,16 +131,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Constants.primaryColor, width: 1.5)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Colors.black, width: 1)),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 1)),
                           errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Colors.red, width: 1)),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 1)),
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  const BorderSide(color: Colors.red, width: 1))),
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 1))),
                     ),
                   ),
                 ],
@@ -151,10 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ResetPasswordScreen()));
+                        NavigationUtils.push(
+                            context, const ResetPasswordScreen());
                       },
                       child: Text(
                         "Forgot your password?",
@@ -295,10 +294,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterScreen()));
+                      NavigationUtils.pushReplacement(
+                          context, RegisterScreen());
                     },
                     child: Container(
                       child: const Text("Sign up",

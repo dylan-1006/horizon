@@ -1,0 +1,214 @@
+import 'package:flutter/material.dart';
+
+class MoodAnimationWidget extends StatefulWidget {
+  final Function(int moodIndex)? onMoodSelected;
+  final double moodSize;
+  
+  const MoodAnimationWidget({
+    Key? key,
+    this.onMoodSelected,
+    this.moodSize = 60,
+  }) : super(key: key);
+
+  @override
+  State<MoodAnimationWidget> createState() => _MoodAnimationWidgetState();
+}
+
+class _MoodAnimationWidgetState extends State<MoodAnimationWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  int? _selectedMoodIndex;
+  int? _targetMoodIndex;
+  bool _isAnimating = false;
+
+  // Define the frame counts
+  static const int framesPerMood = 6;
+  
+  // Define the moods and their positions in the sprite sheet
+  final List<MoodData> _moods = [
+    MoodData(name: 'Angry', rowIndex: 0),
+    MoodData(name: 'Sad', rowIndex: 1),
+    MoodData(name: 'Neutral', rowIndex: 2),
+    MoodData(name: 'Happy', rowIndex: 3),
+    MoodData(name: 'Excited', rowIndex: 4),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500), // Adjust timing as needed
+    );
+
+    _controller.addListener(() {
+      if (_isAnimating) {
+        setState(() {}); // Trigger rebuild to update frame
+        
+        if (_controller.isCompleted) {
+          setState(() {
+            _selectedMoodIndex = _targetMoodIndex;
+            _isAnimating = false;
+            if (widget.onMoodSelected != null) {
+              widget.onMoodSelected!(_selectedMoodIndex!);
+            }
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onMoodTap(int index) {
+    if (_isAnimating) return;
+    
+    setState(() {
+      _targetMoodIndex = index;
+      _isAnimating = true;
+    });
+    
+    _controller.forward(from: 0.0);
+  }
+
+  int _getCurrentFrame() {
+    return (_controller.value * (framesPerMood - 1)).floor();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(_moods.length, (index) {
+        final isSelected = _selectedMoodIndex == index;
+        final isAnimating = _isAnimating && _targetMoodIndex == index;
+        
+        return GestureDetector(
+          onTap: () => _onMoodTap(index),
+          child: MoodFrameWidget(
+            mood: _moods[index],
+            size: widget.moodSize,
+            frame: isAnimating ? _getCurrentFrame() : (isSelected ? framesPerMood - 1 : 0),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class MoodFrameWidget extends StatelessWidget {
+  final MoodData mood;
+  final double size;
+  final int frame;
+
+  const MoodFrameWidget({
+    Key? key,
+    required this.mood,
+    required this.size,
+    required this.frame,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: CustomPaint(
+          size: Size(size, size),
+          painter: MoodFramePainter(
+            rowIndex: mood.rowIndex,
+            frameIndex: frame,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MoodFramePainter extends CustomPainter {
+  final int rowIndex;
+  final int frameIndex;
+  final ui.Image? spriteSheet;
+
+  MoodFramePainter({
+    required this.rowIndex,
+    required this.frameIndex,
+    this.spriteSheet,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (spriteSheet == null) return;
+
+    final frameWidth = spriteSheet!.width / 6; // 6 frames per row
+    final frameHeight = spriteSheet!.height / 5; // 5 emotions
+    
+    final srcRect = Rect.fromLTWH(
+      frameIndex * frameWidth,
+      rowIndex * frameHeight,
+      frameWidth,
+      frameHeight,
+    );
+    
+    final dstRect = Rect.fromLTWH(0, 0, size.width, size.height);
+    
+    canvas.drawImageRect(spriteSheet!, srcRect, dstRect, Paint());
+  }
+
+  @override
+  bool shouldRepaint(MoodFramePainter oldDelegate) {
+    return oldDelegate.rowIndex != rowIndex || 
+           oldDelegate.frameIndex != frameIndex ||
+           oldDelegate.spriteSheet != spriteSheet;
+  }
+}
+
+class MoodData {
+  final String name;
+  final int rowIndex;
+
+  MoodData({
+    required this.name,
+    required this.rowIndex,
+  });
+}
+
+// Helper class to manage sprite sheet loading
+class SpriteSheetLoader {
+  static ui.Image? _spriteSheet;
+  
+  static Future<void> loadSpriteSheet(BuildContext context) async {
+    if (_spriteSheet != null) return;
+
+    final imageProvider = AssetImage('assets/emoji_sprite_sheet.png');
+    final imageStream = imageProvider.resolve(ImageConfiguration());
+    
+    final completer = Completer<void>();
+    
+    ImageStreamListener? listener;
+    listener = ImageStreamListener(
+      (ImageInfo info, bool _) {
+        _spriteSheet = info.image;
+        imageStream.removeListener(listener!);
+        completer.complete();
+      },
+      onError: (dynamic error, StackTrace? stackTrace) {
+        print('Error loading sprite sheet: $error');
+        imageStream.removeListener(listener!);
+        completer.completeError(error);
+      },
+    );
+    
+    imageStream.addListener(listener);
+    return completer.future;
+  }
+
+  static ui.Image? get spriteSheet => _spriteSheet;
+}

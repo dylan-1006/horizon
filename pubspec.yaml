@@ -43,8 +43,15 @@ dependencies:
   delightful_toast: ^1.1.0
   loading_indicator: ^3.1.1
   webview_flutter: ^4.10.0
+  crypto: ^3.0.6
+  http: ^1.3.0
+  fl_chart: ^0.66.1
+  segmented_button_slide: ^2.0.0
+  flutter_local_notifications: ^18.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.14.3"
+
   flutter_test:
     sdk: flutter
 
@@ -58,6 +65,11 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_name_icon.png"
+
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
@@ -70,6 +82,11 @@ flutter:
     - assets/images/home_screen_background.png
     - assets/images/settings_screen_background.png
     - assets/images/default_user_profile_picture.jpg
+    - assets/icons/error_screen_icon.png
+    - assets/icons/fitbit_icon.png
+    - assets/images/breathing_exercise_screen_background.png
+    - assets/emoji_sprite_sheet.png
+    - assets/icons/app_name_icon.png
 
   fonts:
     - family: Garamond

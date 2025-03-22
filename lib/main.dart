@@ -1,15 +1,21 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/fitbit_authorisation_screen.dart';
 import 'package:horizon/screens/home_screen.dart';
 import 'package:horizon/screens/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:horizon/screens/register_screen.dart';
 import 'package:horizon/screens/reset_password_screen.dart';
+import 'package:horizon/utils/notifications_utils.dart';
+import 'package:horizon/utils/prediction_utils.dart';
 import 'package:horizon/widget_tree.dart';
 import 'firebase_options.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +26,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,6 +55,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return FitbitAuthorisationScreen();
+    return WidgetTree();
   }
 }
