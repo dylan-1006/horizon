@@ -158,7 +158,7 @@ class FitbitApiUtils {
       try {
         var restingHeartRate = rawData['heart_rate']!['activities-heart'][0]
             ['value']['restingHeartRate'];
-        processedData['resting_heart_rate'] = restingHeartRate;
+        processedData['resting_heart_rate'] = restingHeartRate ?? 80;
       } catch (e) {
         print("Error processing heart rate data: $e");
       }
@@ -200,14 +200,14 @@ class FitbitApiUtils {
         if (rawData['activity']!['steps'] != null) {
           var activitySteps =
               rawData['activity']!['steps']['activities-steps'][0];
-          processedData['steps'] = double.parse( activitySteps['value']);
+          processedData['steps'] = double.parse(activitySteps['value']);
         }
 
         // // Active minutes
         if (rawData['activity']!['minutesLightlyActive'] != null) {
-          processedData['minutes_lightly_active'] = double.parse( rawData['activity']![
-                  'minutesLightlyActive']!['activities-minutesLightlyActive'][0]
-              ['value']);
+          processedData['minutes_lightly_active'] = double.parse(
+              rawData['activity']!['minutesLightlyActive']![
+                  'activities-minutesLightlyActive'][0]['value']);
         }
 
         if (rawData['activity']!['minutesFairlyActive'] != null) {
