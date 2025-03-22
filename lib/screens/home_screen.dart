@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await PredictionUtils().sendPredictionRequest(extractedData);
     print(predictionResults);
 
-    Timer.periodic(Duration(seconds: 3000), (timer) async {
+    Timer.periodic(Duration(seconds: 500), (timer) async {
       final allData = await fitbitApiUtils.fetchAllData(userId, yesterday);
 
       final processedData = fitbitApiUtils.processAllData(allData);
