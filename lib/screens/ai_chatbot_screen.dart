@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:horizon/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -65,14 +66,23 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_OPENAI_API_KEY',
+          'Authorization': 'Bearer ${dotenv.env['OPENAI_API_KEY']}',
         },
         body: jsonEncode({
           'model': 'gpt-4',
           'messages': [
+            {
+              'role': 'system',
+              'content':
+                  'You are a friendly and insightful AI assistant that helps users reflect on their thoughts.'
+            },
             {'role': 'user', 'content': userInput}
           ],
-          'max_tokens': 100,
+          'temperature': 0.7, // Adjust creativity
+          'max_tokens': 150,
+          'top_p': 1.0,
+          'frequency_penalty': 0.0,
+          'presence_penalty': 0.6,
         }),
       );
       if (response.statusCode == 200) {
