@@ -75,6 +75,7 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/icons/login_icon.png
     - assets/icons/register_icon.png
     - assets/icons/google_icon.png

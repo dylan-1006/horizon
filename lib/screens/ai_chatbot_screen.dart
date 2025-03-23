@@ -61,46 +61,69 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
   Future<void> getAIResponse(String userInput) async {
     setState(() => isLoading = true);
     final url = Uri.parse('https://api.openai.com/v1/chat/completions');
+    print("API Key: ${dotenv.env['OPENAI_API_KEY']}");
+
+    // Build the message history for the API request
+    List<Map<String, String>> messageHistory = [
+      {
+        "role": "system",
+        "content":
+            "You are a friendly and insightful AI assistant that helps users reflect on their thoughts and provide advice on how to improve their mood."
+      },
+    ];
+
+    // Add previous messages to history
+    for (var i = 0; i < _messages.length; i++) {
+      ChatMessage message = _messages[i];
+      messageHistory.add({
+        "role": message.isUser ? "user" : "assistant",
+        "content": message.text,
+      });
+    }
+
+    // Add current user input if it's not already in the messages
+    if (_messages.isEmpty || _messages.last.isUser == false) {
+      messageHistory.add({"role": "user", "content": userInput});
+    }
+
     try {
       final response = await http.post(
         url,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${dotenv.env['OPENAI_API_KEY']}',
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${dotenv.env['OPENAI_API_KEY']}",
         },
         body: jsonEncode({
-          'model': 'gpt-4',
-          'messages': [
-            {
-              'role': 'system',
-              'content':
-                  'You are a friendly and insightful AI assistant that helps users reflect on their thoughts.'
-            },
-            {'role': 'user', 'content': userInput}
-          ],
-          'temperature': 0.7, // Adjust creativity
-          'max_tokens': 150,
-          'top_p': 1.0,
-          'frequency_penalty': 0.0,
-          'presence_penalty': 0.6,
+          // Ensure JSON encoding
+          "model": "gpt-3.5-turbo",
+          "messages": messageHistory,
+          "temperature": 0.7, // Adjust creativity
+          "max_tokens": 300,
+          "top_p": 1.0,
+          "frequency_penalty": 0.0,
+          "presence_penalty": 0.6,
         }),
       );
+
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final Map<String, dynamic> data = jsonDecode(response.body);
         final responseText = data['choices'][0]['message']['content'];
+
         setState(() {
           aiResponse = responseText;
           _messages.add(ChatMessage(
-            text: responseText,
+            text: responseText.toString(),
             isUser: false,
           ));
         });
         _scrollToBottom();
       } else {
         setState(() {
-          aiResponse = 'Error: Unable to fetch response';
+          aiResponse =
+              'Error: Unable to fetch response. Status code: ${response.statusCode}';
           _messages.add(ChatMessage(
-            text: 'Error: Unable to fetch response',
+            text:
+                'Error: Unable to fetch response. Status code: ${response.statusCode}',
             isUser: false,
           ));
         });
@@ -114,6 +137,7 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
           isUser: false,
         ));
       });
+      print('Error: Unable to fetch response. Status code: $e');
       _scrollToBottom();
     }
     setState(() => isLoading = false);
@@ -187,7 +211,7 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
                             height: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white70,
+                              color: Constants.primaryColor,
                             ),
                           ),
                         ),
