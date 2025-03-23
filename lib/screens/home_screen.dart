@@ -12,6 +12,7 @@ import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/utils/fitbit_api_utils.dart';
 import 'package:horizon/utils/prediction_utils.dart';
+import 'package:horizon/utils/fitbit_auth_utils.dart';
 import 'package:horizon/widget_tree.dart';
 import 'package:horizon/widgets/chart_section_widget.dart';
 import 'package:horizon/widgets/breathing_exercise_widget.dart';
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, Map<String, dynamic>?> fitBitData = {};
   late Future<void> _fetchUserDataFuture;
   late String userId;
-
+  late int daysSinceLastAnxiety;
   @override
   void initState() {
     super.initState();
@@ -69,11 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final today = DateTime.now().toString().split(' ')[0];
       var newFitBitData = await FitbitApiUtils().fetchAllDataLast30Days(userId);
 
+      // Calculate days since last anxiety
+      int anxietyDays = await FitbitAuthUtils.calculateLastAnxietyDay(userId);
+
       // Update the state with setState to trigger a rebuild
       setState(() {
         fitBitData = {};
         userData = data;
         fitBitData = newFitBitData;
+        daysSinceLastAnxiety = anxietyDays;
       });
       if (userData['isFitBitAuthorised'] == true) {
         startBackgroundDataFetch();
@@ -221,7 +226,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Expanded(child: BreathingExerciseWidget()),
                               const SizedBox(width: 10),
-                              Expanded(child: LastAnxietyWidget()),
+                              Expanded(
+                                  child: LastAnxietyWidget(
+                                      daysSinceLastAnxiety:
+                                          daysSinceLastAnxiety)),
                             ],
                           ),
                         ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:horizon/auth.dart';
 import 'dart:async';
@@ -173,6 +174,11 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
         {"modelNotificationSensitivity": modelNotificationSensitivity + 0.02});
   }
 
+  Future<void> updateAnxietyLastTriggerTime() async {
+    await DatabaseUtils.updateDocument("users", userId,
+        {"anxietyLastTriggerTime": FieldValue.serverTimestamp()});
+  }
+
   void _showAnxietyConfirmationDialog() {
     showDialog<bool>(
       context: context,
@@ -233,7 +239,8 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
               ),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                await updateAnxietyLastTriggerTime();
                 Navigator.of(context)
                     .pop(); // Just close the dialog and continue
               },
