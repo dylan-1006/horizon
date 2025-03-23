@@ -71,6 +71,75 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
         false;
   }
 
+  Future<void> _showFitbitAuthRequiredDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Fitbit Authorization Required",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+              "Please authorize your Fitbit account first to access this feature."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                NavigationUtils.push(context, FitbitAuthorisationScreen());
+              },
+              child: const Text(
+                "Authorize Now",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showSensitivityResetDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Success",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text("Model sensitivity has been reset successfully."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "OK",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void initState() {
     super.initState();
   }
@@ -238,6 +307,34 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                             additionalInfo: Text(isAccountFitBitAuthorised
                                 ? "Connected"
                                 : "Not connected"),
+                          ),
+                          CupertinoListTile.notched(
+                            title: const Text(
+                              "Rest Prediction Sensitivity",
+                              style: TextStyle(fontFamily: 'Open Sans'),
+                            ),
+                            leading: Container(
+                              decoration: BoxDecoration(
+                                  color: Constants.primaryColor,
+                                  borderRadius: BorderRadius.circular(7)),
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: const Icon(
+                                Icons.restart_alt_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () async {
+                              if (!isAccountFitBitAuthorised) {
+                                _showFitbitAuthRequiredDialog();
+                              } else {
+                                await DatabaseUtils.updateDocument(
+                                    "users",
+                                    userId,
+                                    {"modelNotificationSensitivity": 0.8});
+                                _showSensitivityResetDialog();
+                              }
+                            },
                           ),
                         ],
                       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:horizon/auth.dart';
 import 'dart:async';
 import 'package:horizon/constants.dart';
+import 'package:horizon/utils/database_utils.dart';
 import 'package:segmented_button_slide/segmented_button_slide.dart';
 
 enum BreathingDuration { quick, medium, long }
@@ -32,6 +34,10 @@ class BreathingExerciseScreen extends StatefulWidget {
 
 class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     with TickerProviderStateMixin {
+  late String userId;
+  Map<String, dynamic> userData = {};
+  late double modelNotificationSensitivity;
+
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool _isBreathingActive = false;
@@ -101,6 +107,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
   @override
   void initState() {
     super.initState();
+
     _selectedDuration = BreathingDuration.quick;
     _animationController = AnimationController(
       vsync: this,
@@ -143,10 +150,27 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
     // Show anxiety confirmation dialog if triggered by prediction
     if (widget.isTriggeredByPrediction) {
       // Use a post-frame callback to ensure the screen is built before showing dialog
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showAnxietyConfirmationDialog();
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (mounted) {
+          await fetchUserData();
+          if (mounted) {
+            _showAnxietyConfirmationDialog();
+          }
+        }
       });
     }
+  }
+
+  Future<void> fetchUserData() async {
+    userId = await Auth().getUserId();
+    userData = await DatabaseUtils.getUserData(userId);
+    modelNotificationSensitivity =
+        userData['modelNotificationSensitivity'] ?? 0.8;
+  }
+
+  Future<void> updateModelNotificationSensitivity() async {
+    await DatabaseUtils.updateDocument("users", userId,
+        {"modelNotificationSensitivity": modelNotificationSensitivity + 0.02});
   }
 
   void _showAnxietyConfirmationDialog() {
@@ -166,9 +190,42 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
               "Your anxiety levels seem high. Would you like to continue with the breathing exercise?"),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Return to previous screen
+              onPressed: () async {
+                await updateModelNotificationSensitivity();
+                if (!mounted) return;
+
+                //Navigator.of(context).pop(); // Close the first dialog
+
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text(
+                        "Model Adjusted",
+                        style: TextStyle(
+                          color: Constants.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: const Text(
+                          "Okay the prediction model will be adjusted accordingly"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Continue",
+                            style: TextStyle(color: Constants.primaryColor),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               child: const Text(
                 "False Alarm",

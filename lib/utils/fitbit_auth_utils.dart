@@ -75,6 +75,7 @@ class FitbitAuthUtils {
           "fitbitRefreshToken": newRefreshToken,
           "tokenUpdatedAt": FieldValue.serverTimestamp(),
           'fitbitTokenExpiry': newExpiryTime,
+   
         });
 
         print("Access token refreshed successfully!");
