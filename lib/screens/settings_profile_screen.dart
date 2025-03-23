@@ -192,6 +192,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
             return Scaffold(
               extendBodyBehindAppBar: true,
               appBar: AppBar(
+                shadowColor: Colors.transparent,
                 elevation: 0,
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
