@@ -20,6 +20,7 @@ import 'dart:convert';
 import 'dart:math' show min;
 
 import 'package:horizon/widgets/last_anxiety_widget.dart';
+import 'package:horizon/widgets/reflection_input_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -134,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: SafeArea(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,51 +177,101 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 50),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final fitbitApiUtils = FitbitApiUtils();
-                            final yesterday = DateTime.now()
-                                .subtract(Duration(days: 1))
-                                .toString()
-                                .split(' ')[0];
-                            final today = DateTime.now()
-                                .toString()
-                                .split(' ')[0]; // Format: YYYY-MM-DD
-
-                            // Show loading indicator
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) => const Center(
-                                  child: CircularProgressIndicator()),
-                            );
-
-                            Future.delayed(Duration(seconds: 5), () async {
-                              final sleepData = await PredictionUtils()
-                                  .sendPredictionRequest([
-                                60.75959491729736,
-                                40.021232323232326,
-                                27000321.036327794,
-                                393.07152914671923,
-                                56.625457617572515,
-                                93.77640101379893,
-                                9705,
-                                178,
-                                33,
-                                33,
-                                1196,
-                                -1.547862704
-                              ]);
-                              print(sleepData);
-                            });
-
-                            // Dismiss loading indicator
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Demo Anxiety Trigger'),
-                        ),
                         SizedBox(height: 40),
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          child: Text(
+                            'daily reflection.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 20.0, right: 20.0, bottom: 8),
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontFamily: 'Open Sans',
+                                fontSize: 26,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: "How do you feel about your ",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "current emotions?",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ReflectionInputWidget(),
+
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     final fitbitApiUtils = FitbitApiUtils();
+                        //     final yesterday = DateTime.now()
+                        //         .subtract(Duration(days: 1))
+                        //         .toString()
+                        //         .split(' ')[0];
+                        //     final today = DateTime.now()
+                        //         .toString()
+                        //         .split(' ')[0]; // Format: YYYY-MM-DD
+
+                        //     // Show loading indicator
+                        //     showDialog(
+                        //       context: context,
+                        //       barrierDismissible: false,
+                        //       builder: (context) => const Center(
+                        //           child: CircularProgressIndicator()),
+                        //     );
+
+                        //     Future.delayed(Duration(seconds: 5), () async {
+                        //       final sleepData = await PredictionUtils()
+                        //           .sendPredictionRequest([
+                        //         60.75959491729736,
+                        //         40.021232323232326,
+                        //         27000321.036327794,
+                        //         393.07152914671923,
+                        //         56.625457617572515,
+                        //         93.77640101379893,
+                        //         9705,
+                        //         178,
+                        //         33,
+                        //         33,
+                        //         1196,
+                        //         -1.547862704
+                        //       ]);
+                        //       print(sleepData);
+                        //     });
+
+                        //     // Dismiss loading indicator
+                        //     Navigator.pop(context);
+                        //   },
+                        //   child: const Text('Demo Anxiety Trigger'),
+                        // ),
+                        SizedBox(height: 40),
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          child: Text(
+                            'daily to-do.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
                           child: Row(
