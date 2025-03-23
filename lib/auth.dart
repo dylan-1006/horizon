@@ -26,7 +26,11 @@ class Auth {
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
       FirebaseFirestore.instance.collection('users').doc(value.user!.uid).set(
-        {"email": value.user!.email, "id": value.user!.uid, 'name': name},
+        {
+          "email": value.user!.email,
+          "id": value.user!.uid,
+          'name': name,
+        },
       );
     });
     _firebaseAuth.currentUser?.updateDisplayName(name);

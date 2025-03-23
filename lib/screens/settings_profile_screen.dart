@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/error_screen.dart';
@@ -18,11 +19,49 @@ class SettingsProfileScreen extends StatefulWidget {
 }
 
 class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   bool _isNotificationsOn = true;
+  bool _isNotificationsEnabled = false;
 
   late bool isAccountFitBitAuthorised;
   Map<String, dynamic> userData = {};
   late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    checkNotificationPermission();
+  }
+
+  Future<void> checkNotificationPermission() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    final bool? granted =
+        await androidImplementation?.areNotificationsEnabled();
+
+    setState(() {
+      _isNotificationsEnabled = granted ?? false;
+      _isNotificationsOn = granted ?? false;
+    });
+  }
+
+  Future<void> requestNotificationPermission() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    final bool? granted =
+        await androidImplementation?.requestNotificationsPermission();
+
+    setState(() {
+      _isNotificationsEnabled = granted ?? false;
+      _isNotificationsOn = granted ?? false;
+    });
+  }
+
   Future<void> fetchUserData() async {
     userId = await Auth().getUserId();
     userData = await DatabaseUtils.getUserData(userId);
@@ -138,10 +177,6 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
         );
       },
     );
-  }
-
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -267,12 +302,14 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                             trailing: CupertinoSwitch(
                                 activeColor: Constants.primaryColor,
                                 value: _isNotificationsOn,
-                                onChanged: (bool value) {
-                                  setState(
-                                    () {
-                                      _isNotificationsOn = !_isNotificationsOn;
-                                    },
-                                  );
+                                onChanged: (bool value) async {
+                                  if (value && !_isNotificationsEnabled) {
+                                    await requestNotificationPermission();
+                                  } else {
+                                    setState(() {
+                                      _isNotificationsOn = value;
+                                    });
+                                  }
                                 }),
                           ),
                           CupertinoListTile.notched(
