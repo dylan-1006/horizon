@@ -344,12 +344,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _formKey.currentState?.saveAndValidate();
                               if (_formKey.currentState!.validate()) {
                                 final formData = _formKey.currentState!.value;
-                                print(formData['email']);
+                                print(formData['email'].trim());
                                 print(formData['password']);
                                 try {
                                   await Auth().createUserWithEmailAndPassword(
                                       name: formData['name'],
-                                      email: formData['email'],
+                                      email: formData['email'].trim(),
                                       password: formData['password']);
                                   setState(() {
                                     _accountCreated = true;

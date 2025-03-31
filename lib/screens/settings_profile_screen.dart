@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/screens/edit_profile_screen.dart';
 import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/fitbit_authorisation_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
@@ -261,7 +263,10 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(60)),
                                 elevation: 0),
-                            onPressed: () async {},
+                            onPressed: () async {
+                              NavigationUtils.push(
+                                  context, EditProfileScreen());
+                            },
                             child: const Text(
                               "Edit Profile",
                               style:

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:horizon/utils/database_utils.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -30,6 +31,7 @@ class Auth {
           "email": value.user!.email,
           "id": value.user!.uid,
           'name': name,
+          'dateJoined': FieldValue.serverTimestamp(),
         },
       );
     });
@@ -46,7 +48,8 @@ class Auth {
         {
           "email": value.user!.email,
           "id": value.user!.uid,
-          'name': user!.displayName
+          'name': user!.displayName,
+          'dateJoined': FieldValue.serverTimestamp(),
         },
       );
     });
@@ -65,6 +68,18 @@ class Auth {
 
   Future<void> resetPassword({required String email}) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> updatePassword({required String newPassword}) async {
+    await _firebaseAuth.currentUser?.updatePassword(newPassword);
+  }
+
+  Future<void> updateName({required String newName}) async {
+    await _firebaseAuth.currentUser?.updateDisplayName(newName);
+    await DatabaseUtils.updateDocument(
+        'users', _firebaseAuth.currentUser!.uid, {
+      'name': newName,
+    });
   }
 
   Future<void> signOut() async {
