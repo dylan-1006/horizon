@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   },
                         //   child: const Text('Demo Anxiety Trigger'),
                         // ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 15),
                         Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 10.0),
