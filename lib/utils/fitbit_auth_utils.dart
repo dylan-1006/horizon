@@ -88,4 +88,24 @@ class FitbitAuthUtils {
       return null;
     }
   }
+
+  static Future<int> calculateLastAnxietyDay(String userId) async {
+    try {
+      Map<String, dynamic> userData = await DatabaseUtils.getUserData(userId);
+      DateTime currentTime = await getFirebaseTime();
+
+      if (!userData.containsKey("anxietyLastTriggerTime")) {
+        return 0;
+      }
+
+      DateTime lastTriggerTime =
+          userData["anxietyLastTriggerTime"].toDate().toUtc();
+      int daysSinceLastTrigger = currentTime.difference(lastTriggerTime).inDays;
+
+      return daysSinceLastTrigger;
+    } catch (e) {
+      print("Error calculating last anxiety day: $e");
+      return 0;
+    }
+  }
 }

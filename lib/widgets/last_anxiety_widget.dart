@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/breathing_exercise_screen.dart';
 import 'package:horizon/utils/navigation_utils.dart';
+import 'package:horizon/utils/fitbit_auth_utils.dart';
+import 'package:horizon/auth.dart';
 
 class LastAnxietyWidget extends StatelessWidget {
   final VoidCallback? onTap;
+  final int daysSinceLastAnxiety;
 
-  const LastAnxietyWidget({Key? key, this.onTap}) : super(key: key);
+  const LastAnxietyWidget({
+    Key? key,
+    this.onTap,
+    required this.daysSinceLastAnxiety,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class LastAnxietyWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.symmetric(vertical: 6),
+              margin: EdgeInsets.only(top: 6, bottom: 13),
               child: Row(
                 children: [
                   Container(
@@ -43,69 +50,63 @@ class LastAnxietyWidget extends StatelessWidget {
                     ),
                     margin: EdgeInsets.only(right: 8),
                     child: Icon(
-                      Icons.warning_amber_rounded,
+                      Icons.emoji_emotions_rounded,
                       color: Constants.primaryColor,
                     ),
                   ),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontFamily: 'Open Sans',
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: "Anxiety ",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        TextSpan(
-                          text: "Free",
-                          style: TextStyle(color: Constants.primaryColor),
-                        ),
-                      ],
+                  Text(
+                    "Anxiety Free",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Open Sans',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
-            Stack(children: [
-              Container(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Text(
-                            "0",
-                            style: TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "days",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: CircularProgressIndicator(
+                    strokeCap: StrokeCap.round,
+                    value: daysSinceLastAnxiety / 365,
+                    strokeWidth: 15,
+                    backgroundColor: Colors.grey[200],
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Constants.primaryColor),
                   ),
                 ),
-                width: 130,
-                height: 130,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 12, color: Constants.primaryColor),
-                  shape: BoxShape.circle,
-                  color: Colors.white,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "$daysSinceLastAnxiety",
+                      style: TextStyle(
+                        fontFamily: 'Open Sans',
+                        height: 0.9,
+                        fontSize: 38,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "days",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ]),
+              ],
+            ),
+            SizedBox(
+              height: 8,
+            ),
           ],
         ),
       ),

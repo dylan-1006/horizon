@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
 import 'package:horizon/screens/error_screen.dart';
@@ -18,11 +19,49 @@ class SettingsProfileScreen extends StatefulWidget {
 }
 
 class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   bool _isNotificationsOn = true;
+  bool _isNotificationsEnabled = false;
 
   late bool isAccountFitBitAuthorised;
   Map<String, dynamic> userData = {};
   late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    checkNotificationPermission();
+  }
+
+  Future<void> checkNotificationPermission() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    final bool? granted =
+        await androidImplementation?.areNotificationsEnabled();
+
+    setState(() {
+      _isNotificationsEnabled = granted ?? false;
+      _isNotificationsOn = granted ?? false;
+    });
+  }
+
+  Future<void> requestNotificationPermission() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    final bool? granted =
+        await androidImplementation?.requestNotificationsPermission();
+
+    setState(() {
+      _isNotificationsEnabled = granted ?? false;
+      _isNotificationsOn = granted ?? false;
+    });
+  }
+
   Future<void> fetchUserData() async {
     userId = await Auth().getUserId();
     userData = await DatabaseUtils.getUserData(userId);
@@ -71,8 +110,73 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
         false;
   }
 
-  void initState() {
-    super.initState();
+  Future<void> _showFitbitAuthRequiredDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Fitbit Authorization Required",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+              "Please authorize your Fitbit account first to access this feature."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                NavigationUtils.push(context, FitbitAuthorisationScreen());
+              },
+              child: const Text(
+                "Authorize Now",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showSensitivityResetDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Success",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text("Model sensitivity has been reset successfully."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "OK",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -88,6 +192,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
             return Scaffold(
               extendBodyBehindAppBar: true,
               appBar: AppBar(
+                shadowColor: Colors.transparent,
                 elevation: 0,
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
@@ -198,12 +303,14 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                             trailing: CupertinoSwitch(
                                 activeColor: Constants.primaryColor,
                                 value: _isNotificationsOn,
-                                onChanged: (bool value) {
-                                  setState(
-                                    () {
-                                      _isNotificationsOn = !_isNotificationsOn;
-                                    },
-                                  );
+                                onChanged: (bool value) async {
+                                  if (value && !_isNotificationsEnabled) {
+                                    await requestNotificationPermission();
+                                  } else {
+                                    setState(() {
+                                      _isNotificationsOn = value;
+                                    });
+                                  }
                                 }),
                           ),
                           CupertinoListTile.notched(
@@ -238,6 +345,34 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                             additionalInfo: Text(isAccountFitBitAuthorised
                                 ? "Connected"
                                 : "Not connected"),
+                          ),
+                          CupertinoListTile.notched(
+                            title: const Text(
+                              "Rest Prediction Sensitivity",
+                              style: TextStyle(fontFamily: 'Open Sans'),
+                            ),
+                            leading: Container(
+                              decoration: BoxDecoration(
+                                  color: Constants.primaryColor,
+                                  borderRadius: BorderRadius.circular(7)),
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: const Icon(
+                                Icons.restart_alt_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () async {
+                              if (!isAccountFitBitAuthorised) {
+                                _showFitbitAuthRequiredDialog();
+                              } else {
+                                await DatabaseUtils.updateDocument(
+                                    "users",
+                                    userId,
+                                    {"modelNotificationSensitivity": 0.8});
+                                _showSensitivityResetDialog();
+                              }
+                            },
                           ),
                         ],
                       ),

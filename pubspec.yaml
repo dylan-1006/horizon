@@ -48,6 +48,7 @@ dependencies:
   fl_chart: ^0.66.1
   segmented_button_slide: ^2.0.0
   flutter_local_notifications: ^18.0.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.14.3"
@@ -74,6 +75,7 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/icons/login_icon.png
     - assets/icons/register_icon.png
     - assets/icons/google_icon.png

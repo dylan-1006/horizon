@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:horizon/auth.dart';
+import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/notifications_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PredictionUtils {
+  late String userId;
+  Map<String, dynamic> userData = {};
+  late double modelNotificationSensitivity;
   Future<Map<String, dynamic>?> sendPredictionRequest(
       List<num> features) async {
     try {
@@ -42,7 +47,15 @@ class PredictionUtils {
         .toList();
   }
 
+  Future<void> fetchUserData() async {
+    userId = await Auth().getUserId();
+    userData = await DatabaseUtils.getUserData(userId);
+    modelNotificationSensitivity = userData['modelNotificationSensitivity'];
+  }
+
   Future<void> processPredictionResult(Map<String, dynamic> result) async {
+    await fetchUserData();
+
     if (result.containsKey('prediction') && result.containsKey('probability')) {
       final prediction = result['prediction'][0];
       final probabilities = result['probability'][0];
@@ -50,7 +63,7 @@ class PredictionUtils {
       // Check if prediction is 1 (anxiety) and probability > 0.8
       if (prediction == 1 &&
           probabilities.length > 1 &&
-          probabilities[1] > 0.8) {
+          probabilities[1] > modelNotificationSensitivity) {
         await _showAnxietyNotification();
         return;
       }

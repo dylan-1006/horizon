@@ -110,6 +110,8 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
         "fitbitAccessToken": accessToken,
         "fitbitRefreshToken": refreshToken,
         "tokenUpdatedAt": FieldValue.serverTimestamp(),
+        'modelNotificationSensitivity': 0.8,
+        "anxietyLastTriggerTime": FieldValue.serverTimestamp(),
       });
 
       _handleReturnToProfileScreen();
