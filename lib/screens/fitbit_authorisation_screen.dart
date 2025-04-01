@@ -190,7 +190,8 @@ class _FitbitAuthorisationScreenState extends State<FitbitAuthorisationScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true);
+                    NavigationUtils.pushAndRemoveUntil(
+                        context, SettingsProfileScreen());
                   },
                   child: const Text(
                     "Yes",

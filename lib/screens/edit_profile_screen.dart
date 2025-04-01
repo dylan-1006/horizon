@@ -3,13 +3,14 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:horizon/auth.dart';
 import 'package:horizon/constants.dart';
-import 'package:horizon/auth.dart';
 import 'package:horizon/screens/error_screen.dart';
 import 'package:horizon/screens/loading_screen.dart';
 import 'package:horizon/screens/settings_profile_screen.dart';
 import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -29,6 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Map<String, dynamic> userData = {};
   late String userId;
   String _joinedDate = '';
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -79,6 +81,109 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  Future<void> _takePhoto() async {
+    try {
+      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+      if (photo != null) {
+        await _updateProfileImage(File(photo.path));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error taking photo: ${e.toString()}')),
+      );
+      print('Error taking photo: ${e.toString()}');
+    }
+  }
+
+  Future<void> _chooseFromGallery() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        await _updateProfileImage(File(image.path));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error selecting image: ${e.toString()}')),
+      );
+    }
+  }
+
+  Future<void> _updateProfileImage(File imageFile) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Constants.primaryColor,
+          ));
+        },
+      );
+
+      // Upload image using Auth class
+      final downloadUrl = await Auth().uploadProfileImage(imageFile);
+
+      // Update local state
+      setState(() {
+        userData['profileImgUrl'] = downloadUrl;
+      });
+
+      // Close loading indicator
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile photo updated')),
+      );
+    } catch (e) {
+      // Close loading indicator
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: ${e.toString()}')),
+      );
+    }
+  }
+
+  Future<void> _removeProfilePhoto() async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Constants.primaryColor,
+          ));
+        },
+      );
+
+      // Remove profile image using Auth class
+      await Auth().removeProfileImage();
+
+      // Update local state
+      setState(() {
+        userData['profileImgUrl'] = null;
+      });
+
+      // Close loading indicator
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile photo removed')),
+      );
+    } catch (e) {
+      // Close loading indicator
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error removing photo: ${e.toString()}')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -97,8 +202,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
                 leading: Container(
-                  child: const BackButton(
-                    color: Colors.black,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () {
+                      NavigationUtils.pushAndRemoveUntil(
+                          context, SettingsProfileScreen());
+                    },
                   ),
                 ),
               ),
@@ -141,7 +250,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  // TODO: Implement image picker
+                                  showModalBottomSheet(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20)),
+                                    ),
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListTile(
+                                              leading:
+                                                  const Icon(Icons.camera_alt),
+                                              title: const Text('Take Photo'),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                _takePhoto();
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                  Icons.photo_library),
+                                              title: const Text(
+                                                  'Choose from Library'),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                _chooseFromGallery();
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: const Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                              title: const Text(
+                                                'Remove Photo',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                _removeProfilePhoto();
+                                              },
+                                            ),
+                                            ListTile(
+                                              title: Text(
+                                                'Cancel',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color:
+                                                        Constants.primaryColor),
+                                              ),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
                                 child: Container(
                                   width: 30,

@@ -199,8 +199,12 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
                 leading: Container(
-                  child: const BackButton(
-                    color: Colors.black,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () {
+                      NavigationUtils.pushAndRemoveUntil(
+                          context, const WidgetTree());
+                    },
                   ),
                 ),
               ),
@@ -224,7 +228,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.cover,
                                   image: userData['profileImgUrl'] != null
                                       ? NetworkImage(userData['profileImgUrl'])
                                       : const AssetImage(
