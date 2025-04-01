@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:horizon/constants.dart';
+import 'package:horizon/utils/navigation_utils.dart';
+import 'package:horizon/widget_tree.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
@@ -68,7 +70,7 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
       {
         "role": "system",
         "content":
-            "You are a friendly and insightful AI assistant that helps users reflect on their thoughts and provide advice on how to improve their mood."
+            "You are a friendly and insightful AI assistant that helps users reflect on their thoughts and provide advice on how to improve their mood. Limit all your responses to 100 words. "
       },
     ];
 
@@ -171,14 +173,18 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            NavigationUtils.pushAndRemoveUntil(context, const WidgetTree());
+          },
         ),
         title: Row(
           children: [
             const Spacer(),
             IconButton(
               icon: const Icon(Icons.more_horiz, color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+                _showOptionsMenu(context);
+              },
             ),
           ],
         ),
@@ -271,6 +277,48 @@ class _AIChatbotScreenState extends State<AIChatbotScreen> {
         ),
       ),
     );
+  }
+
+  void _showOptionsMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.refresh, color: Color(0xff7984E4)),
+                title: const Text('Start a new conversation'),
+                onTap: () {
+                  Navigator.pop(context); // Close the bottom sheet
+                  _startNewConversation();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _startNewConversation() {
+    setState(() {
+      _messages.clear();
+      _messages.add(ChatMessage(
+        text: "How can I help you today?",
+        isUser: false,
+      ));
+    });
+    _scrollToBottom();
   }
 }
 
