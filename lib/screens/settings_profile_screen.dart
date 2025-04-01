@@ -12,6 +12,7 @@ import 'package:horizon/utils/database_utils.dart';
 import 'package:horizon/utils/fitbit_auth_utils.dart';
 import 'package:horizon/utils/navigation_utils.dart';
 import 'package:horizon/widget_tree.dart';
+import 'dart:ui';
 
 class SettingsProfileScreen extends StatefulWidget {
   const SettingsProfileScreen({super.key});
@@ -221,18 +222,78 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(
-                        child: Container(
-                          width: 90,
-                          height: 90,
-                          margin: const EdgeInsets.only(top: 85),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: userData['profileImgUrl'] != null
-                                      ? NetworkImage(userData['profileImgUrl'])
-                                      : const AssetImage(
-                                          'assets/images/default_user_profile_picture.jpg'))),
+                        child: GestureDetector(
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              barrierColor: Colors.black.withOpacity(0.7),
+                              builder: (BuildContext context) {
+                                return BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                  child: Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    elevation: 0,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          height: 250,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: userData[
+                                                          'profileImgUrl'] !=
+                                                      null
+                                                  ? NetworkImage(
+                                                      userData['profileImgUrl'])
+                                                  : const AssetImage(
+                                                      'assets/images/default_user_profile_picture.jpg'),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                Constants.primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text(
+                                            "Close",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 90,
+                            height: 90,
+                            margin: const EdgeInsets.only(top: 85),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: userData['profileImgUrl'] != null
+                                        ? NetworkImage(
+                                            userData['profileImgUrl'])
+                                        : const AssetImage(
+                                            'assets/images/default_user_profile_picture.jpg'))),
+                          ),
                         ),
                       ),
                       Center(
