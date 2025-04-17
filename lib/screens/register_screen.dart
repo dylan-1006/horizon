@@ -1,6 +1,7 @@
 import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -21,6 +22,248 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   bool _accountCreated = false;
   bool _isObscure = true;
+
+  Future<void> _showPrivacyPolicyDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Privacy Policy",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text(
+                  "Privacy Policy",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Data Collection and Processing",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Horizon Health Technologies Ltd. (\"we,\" \"our,\" or \"the Company\") collects and processes physiological data from your Fitbit device solely for the purpose of providing anxiety monitoring services. All data acquisition occurs exclusively through Fitbit's authorized OAuth 2.0 authentication framework and only after obtaining your explicit consent as required under the General Data Protection Regulation (GDPR).",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Data Subject Rights",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "As the data subject, you retain full ownership rights to your health information and are entitled to:\n- Withdraw your consent for data processing at any time\n- Request complete erasure of your personal data from our systems\n- Access and export your data in a machine-readable format\n- Lodge complaints with the relevant supervisory authority",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Technical and Organizational Measures",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "The Company implements industry-standard encryption protocols for all data transmission and storage. Our machine learning algorithms undergo rigorous testing to minimize demographic bias and ensure equitable performance across diverse user populations.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Service Limitations",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Our anxiety detection system operates with a target confidence threshold of 85%. The analytical results provided are intended for informational purposes only and do not constitute medical diagnosis or treatment recommendations. Users are advised to consult qualified healthcare professionals for clinical evaluation and intervention.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Regulatory Compliance",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "This application is developed and maintained in strict accordance with the General Data Protection Regulation (EU) 2016/679, Fitbit's Developer Terms of Service, and applicable data protection legislation. For further information regarding our data handling practices or to exercise your rights as a data subject, please contact our Data Protection Officer at privacy@horizonhealth.com.",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Close",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showTermsAndConditionsDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Terms & Conditions",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text(
+                  "Terms & Conditions",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "1. Acceptance of Terms",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "By accessing or using Horizon's anxiety monitoring services, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions. If you do not agree with any part of these terms, you may not use our services.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "2. Description of Service",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Horizon provides an anxiety monitoring and management platform that processes data from Fitbit wearable devices. Our service uses machine learning algorithms to analyze physiological data and identify potential anxiety patterns. The service is intended for informational purposes only and does not provide medical diagnosis or treatment.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "3. User Accounts",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account. We reserve the right to terminate accounts that violate our terms or policies.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "4. Data Usage and Privacy",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Your use of our services is also governed by our Privacy Policy. By using Horizon, you consent to the collection and processing of your data as described in the Privacy Policy. We implement appropriate technical and organizational measures to protect your data.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "5. Limitations and Disclaimers",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. WE DO NOT GUARANTEE THE ACCURACY, COMPLETENESS, OR RELIABILITY OF OUR ANXIETY DETECTION ALGORITHMS. HORIZON IS NOT A SUBSTITUTE FOR PROFESSIONAL MEDICAL ADVICE, DIAGNOSIS, OR TREATMENT. ALWAYS SEEK THE ADVICE OF QUALIFIED HEALTH PROVIDERS FOR ANY HEALTH-RELATED CONCERNS.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "6. Changes to Terms",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "We reserve the right to modify these Terms & Conditions at any time. We will notify users of material changes through the application or via email. Your continued use of Horizon after such modifications constitutes your acceptance of the updated terms.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "7. Governing Law",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "These Terms & Conditions shall be governed by and construed in accordance with the laws of the United Kingdom, without regard to its conflict of law provisions.",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Close",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -323,6 +566,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: const BorderSide(
                                         color: Colors.red, width: 1))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 35, right: 35, top: 20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontFamily: 'Open Sans',
+                                fontSize: 13,
+                                color: Constants.accentColor,
+                              ),
+                              children: [
+                                const TextSpan(
+                                  text: "By signing up, you agree to our ",
+                                ),
+                                TextSpan(
+                                  text: "Privacy Policy",
+                                  style: const TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    color: Constants.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _showPrivacyPolicyDialog();
+                                    },
+                                ),
+                                const TextSpan(
+                                  text: " and ",
+                                ),
+                                TextSpan(
+                                  text: "Terms & Conditions",
+                                  style: const TextStyle(
+                                    fontFamily: 'Open Sans',
+                                    color: Constants.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _showTermsAndConditionsDialog();
+                                    },
+                                ),
+                                const TextSpan(
+                                  text: ".",
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

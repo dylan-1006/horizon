@@ -290,6 +290,183 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     );
   }
 
+  Future<void> _showTermsAndConditionsDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Terms & Conditions",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text(
+                  "Terms & Conditions",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "1. Acceptance of Terms",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "By accessing or using Horizon's anxiety monitoring services, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions. If you do not agree with any part of these terms, you may not use our services.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "2. Description of Service",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Horizon provides an anxiety monitoring and management platform that processes data from Fitbit wearable devices. Our service uses machine learning algorithms to analyze physiological data and identify potential anxiety patterns. The service is intended for informational purposes only and does not provide medical diagnosis or treatment.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "3. User Accounts",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account. We reserve the right to terminate accounts that violate our terms or policies.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "4. Data Usage and Privacy",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Your use of our services is also governed by our Privacy Policy. By using Horizon, you consent to the collection and processing of your data as described in the Privacy Policy. We implement appropriate technical and organizational measures to protect your data.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "5. Limitations and Disclaimers",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. WE DO NOT GUARANTEE THE ACCURACY, COMPLETENESS, OR RELIABILITY OF OUR ANXIETY DETECTION ALGORITHMS. HORIZON IS NOT A SUBSTITUTE FOR PROFESSIONAL MEDICAL ADVICE, DIAGNOSIS, OR TREATMENT. ALWAYS SEEK THE ADVICE OF QUALIFIED HEALTH PROVIDERS FOR ANY HEALTH-RELATED CONCERNS.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "6. Changes to Terms",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "We reserve the right to modify these Terms & Conditions at any time. We will notify users of material changes through the application or via email. Your continued use of Horizon after such modifications constitutes your acceptance of the updated terms.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "7. Governing Law",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "These Terms & Conditions shall be governed by and construed in accordance with the laws of the United Kingdom, without regard to its conflict of law provisions.",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Close",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _showLogoutConfirmationDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Confirm Logout",
+                style: TextStyle(
+                  color: Constants.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: const Text(
+                "Are you sure you want to log out of your account?",
+                style: TextStyle(fontSize: 14),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Constants.accentColor),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(
+                        color: Color(0xffFF2B51), fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -595,7 +772,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                           ),
                           CupertinoListTile.notched(
                             title: const Text(
-                              "Support",
+                              "Terms & Conditions",
                               style: TextStyle(fontFamily: 'Open Sans'),
                             ),
                             leading: Container(
@@ -605,19 +782,27 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                               width: double.infinity,
                               height: double.infinity,
                               child: const Icon(
-                                size: 20,
-                                Icons.help_rounded,
+                                Icons.description_outlined,
                                 color: Colors.white,
                               ),
                             ),
-                            trailing: const CupertinoListTileChevron(),
-                            onTap: () {},
+                            trailing: const Icon(
+                              Icons.info_outline,
+                              color: Color(0xff007aff),
+                            ),
+                            onTap: () {
+                              _showTermsAndConditionsDialog();
+                            },
                           ),
                           CupertinoListTile.notched(
                             onTap: () async {
-                              await Auth().signOut();
-                              NavigationUtils.pushAndRemoveUntil(
-                                  context, const WidgetTree());
+                              bool confirmed =
+                                  await _showLogoutConfirmationDialog();
+                              if (confirmed) {
+                                await Auth().signOut();
+                                NavigationUtils.pushAndRemoveUntil(
+                                    context, const WidgetTree());
+                              }
                             },
                             title: const Text(
                               "Logout",
