@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+      
         fontFamily: 'Open Sans',
         textSelectionTheme: const TextSelectionThemeData(
             cursorColor: Constants.primaryColor,

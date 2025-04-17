@@ -182,6 +182,114 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
     );
   }
 
+  Future<void> _showPrivacyPolicyDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Privacy Policy",
+            style: TextStyle(
+              color: Constants.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text(
+                  "Privacy Policy",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Data Collection and Processing",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Horizon Health Technologies Ltd. (\"we,\" \"our,\" or \"the Company\") collects and processes physiological data from your Fitbit device solely for the purpose of providing anxiety monitoring services. All data acquisition occurs exclusively through Fitbit's authorized OAuth 2.0 authentication framework and only after obtaining your explicit consent as required under the General Data Protection Regulation (GDPR).",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Data Subject Rights",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "As the data subject, you retain full ownership rights to your health information and are entitled to:\n- Withdraw your consent for data processing at any time\n- Request complete erasure of your personal data from our systems\n- Access and export your data in a machine-readable format\n- Lodge complaints with the relevant supervisory authority",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Technical and Organizational Measures",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "The Company implements industry-standard encryption protocols for all data transmission and storage. Our machine learning algorithms undergo rigorous testing to minimize demographic bias and ensure equitable performance across diverse user populations.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Service Limitations",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Our anxiety detection system operates with a target confidence threshold of 85%. The analytical results provided are intended for informational purposes only and do not constitute medical diagnosis or treatment recommendations. Users are advised to consult qualified healthcare professionals for clinical evaluation and intervention.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "Regulatory Compliance",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "This application is developed and maintained in strict accordance with the General Data Protection Regulation (EU) 2016/679, Fitbit's Developer Terms of Service, and applicable data protection legislation. For further information regarding our data handling practices or to exercise your rights as a data subject, please contact our Data Protection Officer at privacy@horizonhealth.com.",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Close",
+                style: TextStyle(color: Constants.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -481,6 +589,9 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
                               Icons.info_outline,
                               color: Color(0xff007aff),
                             ),
+                            onTap: () {
+                              _showPrivacyPolicyDialog();
+                            },
                           ),
                           CupertinoListTile.notched(
                             title: const Text(
