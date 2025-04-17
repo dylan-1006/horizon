@@ -178,11 +178,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   _formKey.currentState?.saveAndValidate();
                   if (_formKey.currentState!.validate()) {
                     final formData = _formKey.currentState!.value;
-                    print(formData['email']);
+                    print(formData['email'].trim());
                     print(formData['password']);
                     try {
                       await Auth().signInWithEmailAndPassword(
-                          email: formData['email'],
+                          email: formData['email'].trim(),
                           password: formData['password']);
                     } on FirebaseAuthException catch (e) {
                       DelightToastBar(

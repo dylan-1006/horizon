@@ -215,7 +215,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen>
                         ),
                       ),
                       content: const Text(
-                          "Okay the prediction model will be adjusted accordingly"),
+                          "Okay the prediction model will be adjusted accordingly."),
                       actions: [
                         TextButton(
                           onPressed: () {
