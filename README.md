@@ -11,10 +11,6 @@ Horizon is a mobile application designed to help users monitor and manage their 
 - **Privacy-Focused**: Your data is protected with industry-standard encryption protocols
 - **User-Friendly Interface**: Clean, intuitive design for a seamless user experience
 
-## Screenshots
-
-[Screenshots will be added here]
-
 ## Installation Guide
 
 ### Requirements
