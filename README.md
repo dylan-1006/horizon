@@ -11,6 +11,12 @@ Horizon is a mobile application designed to help users monitor and manage their 
 - **Privacy-Focused**: Your data is protected with industry-standard encryption protocols
 - **User-Friendly Interface**: Clean, intuitive design for a seamless user experience
 
+## Download
+
+[![Download APK](https://img.shields.io/github/v/release/dylan-1006/horizon?color=blue&label=Download&logo=android)](https://github.com/dylan-1006/horizon/releases/latest)
+
+You can download the latest APK file directly from our [GitHub Releases](https://github.com/dylan-1006/horizon/releases/latest) page.
+
 ## Installation Guide
 
 ### Requirements
@@ -23,6 +29,7 @@ Horizon is a mobile application designed to help users monitor and manage their 
 
 1. **Install on Android**
 
+   - Download the APK from the [Releases page](https://github.com/dylan-1006/horizon/releases/latest)
    - Enable "Install from Unknown Sources" in your device settings if not already enabled
    - Open the downloaded APK file and follow the installation prompts
    - Grant necessary permissions when prompted during first launch
@@ -81,7 +88,7 @@ For more details, please review our Privacy Policy and Terms & Conditions in the
 1. Clone the repository:
 
    ```
-   git clone https://github.com/yourusername/horizon.git
+   git clone https://github.com/dylan-1006/horizon.git
    ```
 
 2. Navigate to the project directory:
@@ -105,14 +112,13 @@ For more details, please review our Privacy Policy and Terms & Conditions in the
 
 ## License
 
-[License information will be added here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
 For any questions or support, please contact:
 
-- Email: [contact email]
-- Website: [website URL]
+- Email: [horizon.horos@gmail.com](mailto:horizon.horos@gmail.com)
 
 ---
 
